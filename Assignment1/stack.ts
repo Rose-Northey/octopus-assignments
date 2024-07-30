@@ -30,8 +30,3 @@ export default class stack {
     return this.maxNumbers[this.maxNumbers.length - 1];
   }
 }
-
-/*
-if you remove the number and it is the max then the max may change
-what if you have an array of max numbers and every time a number is added or removed a new max number is given
-*/
