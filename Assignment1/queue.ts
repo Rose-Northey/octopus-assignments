@@ -6,7 +6,7 @@ export default class queue {
   // orderedData: number[] you won't know where to put numbers which fall in between maximums
 
   constructor() {
-    this.data = [];
+    this.data = new Array(5);
     this.iFront = 0;
     this.iBack = 0;
     this.iMax = 0;
