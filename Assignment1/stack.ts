@@ -2,6 +2,7 @@ export class Plate {
   public data: number;
   public max: number;
   public lowerPlate: Plate | undefined;
+
   constructor(newData: number, lowerPlate: Plate | undefined) {
     this.lowerPlate = lowerPlate;
     this.data = newData;

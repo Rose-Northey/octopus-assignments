@@ -51,9 +51,14 @@ describe('Assignment 1 Create a Stack', () => {
     });
   });
   describe('errors are handled', () => {
+    const myStack = new Stack();
     test('undefined thrown for max when no numbers in Stack', () => {
-      const myStack = new Stack();
       expect(() => myStack.Max()).toThrow();
+    });
+    test('when stack is empty, pop throws error', () => {
+      myStack.Push(firstPlate);
+      myStack.Pop();
+      expect(() => myStack.Pop()).toThrow(new Error('no plates to pop'));
     });
   });
 });
