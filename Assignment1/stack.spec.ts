@@ -1,56 +1,59 @@
-import stack from './stack';
+import {Stack} from './stack';
 
-describe('Assignment 1', () => {
-  test('stack adds new number to the array', () => {
-    const stack1 = new stack();
-    stack1.Push(1);
-    const actual = stack1.data;
-    const expected = [1];
-    expect(actual).toEqual(expected);
-  });
-  test('stack adds another new number to the end of the array', () => {
-    const stack1 = new stack();
-    stack1.Push(1);
-    stack1.Push(2);
-    const actual = stack1.data;
-    const expected = [1, 2];
-    expect(actual).toEqual(expected);
-  });
-  test('stack removes last added number first', () => {
-    const stack1 = new stack();
-    stack1.Push(1);
-    stack1.Push(2);
-    stack1.Pop();
-    const actual = stack1.data;
-    const expected = [1];
-    expect(actual).toEqual(expected);
-  });
-  test('stack returns maximum number correctly', () => {
-    const stack1 = new stack();
-    stack1.Push(1);
-    stack1.Push(4);
-    stack1.Push(3);
-    const actual = stack1.Max();
-    const expected = 4;
-    expect(actual).toEqual(expected);
+describe('Assignment 1 Create a Stack', () => {
+  const firstPlate = 1;
+  const secondPlate = 2;
+  const thirdPlate = 1;
+  const fourthPlate = 4;
+
+  describe('Stack adds 2 number to the array', () => {
+    const myStack = new Stack();
+    myStack.Push(firstPlate);
+    myStack.Push(secondPlate);
+
+    test('after push, size is 2', () => {
+      expect(myStack.size).toEqual(2);
+    });
+
+    test('after push, secondPlate is top', () => {
+      expect(myStack.topPlate?.data).toEqual(secondPlate);
+    });
   });
 
-  test('stack returns maximum number correctly when a new max is added then taken away', () => {
-    const stack1 = new stack();
-    stack1.Push(1);
-    stack1.Push(4);
-    stack1.Push(3);
-    stack1.Push(5);
-    stack1.Pop();
-    const actual = stack1.Max();
-    const expected = 4;
-    expect(actual).toEqual(expected);
+  describe('Stack removes last added number first', () => {
+    const myStack = new Stack();
+    myStack.Push(firstPlate);
+    myStack.Push(secondPlate);
+    myStack.Pop();
+
+    test('after pop, firstPlate is top', () => {
+      expect(myStack.topPlate?.data).toBe(firstPlate);
+    });
+    test('after pop, size is 1', () => {
+      expect(myStack.size).toBe(1);
+    });
   });
 
-  test('undefined thrown for max when no numbers in stack', () => {
-    const stack1 = new stack();
-    const actual = () => stack1.Max();
-    const expected = 'there are no numbers in this stack!';
-    expect(() => stack1.Max()).toThrow();
+  describe('stack finds max', () => {
+    const myStack = new Stack();
+    myStack.Push(firstPlate);
+    myStack.Push(secondPlate);
+    myStack.Push(thirdPlate);
+    test('Stack returns maximum number correctly when max in middle', () => {
+      expect(myStack.Max()).toEqual(2);
+    });
+
+    test('Stack returns maximum number correctly when a new max is added then taken away', () => {
+      myStack.Push(fourthPlate);
+      const firstMax = myStack.Max();
+      myStack.Pop();
+      expect(myStack.Max()).not.toEqual(firstMax);
+    });
+  });
+  describe('errors are handled', () => {
+    test('undefined thrown for max when no numbers in Stack', () => {
+      const myStack = new Stack();
+      expect(() => myStack.Max()).toThrow();
+    });
   });
 });
