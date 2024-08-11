@@ -1,55 +1,60 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const stack_1 = require("./stack");
 class queue {
-    // orderedData: number[] you won't know where to put numbers which fall in between maximums
     constructor() {
-        this.data = new Array(5);
-        this.iFront = 0;
-        this.iBack = 0;
-        this.iMax = 0;
+        this.inPatients = new stack_1.Stack();
+        this.outPatients = new stack_1.Stack();
+        this.queueSize = 0;
     }
-    Push(newNumber) {
-        this.data[this.iBack] = newNumber;
-        this.iBack++;
+    Push(ailments) {
+        this.inPatients.Push(ailments);
+        this.queueSize++;
     }
     Pop() {
-        if (this.iFront === this.iBack) {
-            throw new Error('Nothing to pop!');
+        this.throwErrorIfQueueEmpty();
+        if (this.outPatients.size === 0) {
+            while (this.inPatients.size > 0) {
+                this.outPatients.Push(this.inPatients.Pop());
+            }
         }
-        const returnedValue = this.data[this.iFront];
-        this.iFront++;
-        return returnedValue;
+        this.queueSize--;
+        return this.outPatients.Pop();
     }
-    ToList() {
-        return this.data;
+    Max() {
+        this.throwErrorIfQueueEmpty();
+        let inPatientsMax = 0;
+        let outPatientsMax = 0;
+        if (this.inPatients.size > 0) {
+            inPatientsMax = this.inPatients.Max();
+        }
+        if (this.outPatients.size > 0) {
+            outPatientsMax = this.outPatients.Max();
+        }
+        return Math.max(inPatientsMax, outPatientsMax);
     }
-    Max() { }
+    FrontOfQueue() {
+        this.throwErrorIfQueueEmpty();
+        if (this.outPatients.size > 0) {
+            return this.outPatients.PeakTop();
+        }
+        else {
+            return this.inPatients.PeakBottom();
+        }
+    }
+    BackOfQueue() {
+        this.throwErrorIfQueueEmpty();
+        if (this.inPatients.size > 0) {
+            return this.inPatients.PeakTop();
+        }
+        else {
+            return this.outPatients.PeakBottom();
+        }
+    }
+    throwErrorIfQueueEmpty() {
+        if (this.queueSize === 0) {
+            throw new Error('there are no patients at all!');
+        }
+    }
 }
 exports.default = queue;
-// this.data[this.iFront] = undefined;
-// INDEX LOOKUP IS constant Big O notation!!
-// Maximum array but with indexes?
-// e.g. [6, 3, 5, 2]
-//
-//store the index of the maximum numbers NOT the actual number
-// maximumIndexes = 0
-// -> for each number you add, compare it to the index at the maximum index point
-// when you add one to the end, imagine that you are
-// 2nd max index
-// [6, 5, 5, 2]
-// AND if you had [6, 3, 5, 2, 7] -> [7, 7, 7, 7, 7]
-// HOW DO I MAKE THIS?
-// [6] -> [6]
-// [6, 3] -> [6, 3]
-// [6, 3, 5] -> [6, 5, 5] change previous to 5
-// [6, 3, 5, 2] -> [6, 5, 5, 2]
-// [6, 3, 5, 2, 7] -> change all to 7 [7,7,7,7,7] DOES EXPAND WITH N
-// If I have a maximum index array I would want it to be
-// [0 2 2 3]
-// so if nothing is popped, index points to 6, if 6 is popped index points to 5, if 5 is popped, index points to 2
-// HOW DO I MAKE THIS
-// [6] -> [0]
-// [6, 3] -> [0, 1]
-// [6, 3, 5] -> I check out what is at 1 and compare it to my new number IF its bigger, then
-// [2, 2],[5, 5], [1, 5] 
-// -> [1 , 1], [5, 5], [2, 5]

@@ -5,25 +5,47 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const queue_1 = __importDefault(require("./queue"));
 describe('test queue', () => {
-    test('first removed number is first added', () => {
-        const queue1 = new queue_1.default();
-        const firstNumber = 1;
-        const otherNumber = 3;
-        queue1.Push(firstNumber);
-        queue1.Push(otherNumber);
-        queue1.Push(otherNumber);
-        const returnedValue = queue1.Pop();
-        const actual = queue1.ToList();
-        expect(returnedValue).toEqual(firstNumber);
+    const firstPatient = 4;
+    const secondPatient = 3;
+    const thirdPatient = 1;
+    const fourthPatient = 5;
+    describe('First Patient in is First Patient out', () => {
+        const myQueue = new queue_1.default();
+        myQueue.Push(firstPatient);
+        myQueue.Push(secondPatient);
+        myQueue.Push(thirdPatient);
+        const firstPopped = myQueue.Pop();
+        myQueue.Pop();
+        const lastPopped = myQueue.Pop();
+        test('of 3 patients added, patient 1 is popped first', () => {
+            expect(firstPopped).toBe(firstPatient);
+        });
+        test('of 3 patients added, patient 3 is popped last', () => {
+            console.log(myQueue.queueSize);
+            expect(lastPopped).toBe(thirdPatient);
+        });
     });
-    test('error is thrown when pop comes before push', () => {
-        const queue1 = new queue_1.default();
-        expect(() => queue1.Pop()).toThrow();
+    describe('Correctly calculates the max', () => {
+        const myQueue = new queue_1.default();
+        myQueue.Push(firstPatient);
+        myQueue.Push(secondPatient);
+        myQueue.Push(thirdPatient);
+        test('of 3 pushed numbers', () => {
+            expect(myQueue.Max()).toBe(firstPatient);
+        });
+        test('when old max is popped', () => {
+            myQueue.Pop();
+            expect(myQueue.Max()).toBe(secondPatient);
+        });
+        test('when new max is added', () => {
+            myQueue.Push(fourthPatient);
+            expect(myQueue.Max()).toBe(fourthPatient);
+        });
     });
-    test('error is thrown when nothing left to pop', () => {
-        const queue1 = new queue_1.default();
-        queue1.Push(1);
-        queue1.Pop();
-        expect(() => queue1.Pop()).toThrow();
+    describe('Correctly handles errors', () => {
+        test('throws an error when nothing added to queue', () => {
+            const myQueue = new queue_1.default();
+            expect(() => myQueue.Pop()).toThrow(new Error('there are no patients at all!'));
+        });
     });
 });

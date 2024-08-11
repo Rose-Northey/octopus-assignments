@@ -22,6 +22,11 @@
    - Input: A string consisting of brackets of different types: `(`, `)`, `[`, `]`, `{`, `}`
    - Implement an algorithm to check if the sequence is correct (i.e., each opening bracket has a corresponding closing bracket)
    - Example:
-     - Correct sequences: `([{}])`, `()()`
+     - Correct sequences: c, `()()`
      - Incorrect sequences: `[)`, `[(])`
    - The algorithm should have a time complexity of `O(n)`, where `n` is the length of the input string.
+
+<!-- `([{}])`
+
+
+ -->

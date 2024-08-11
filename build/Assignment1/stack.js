@@ -18,19 +18,25 @@ class Plate {
 }
 exports.Plate = Plate;
 class Stack {
-    constructor(firstPlateData) {
-        this.size = 1;
-        this.topPlate = new Plate(firstPlateData, undefined);
+    constructor() {
+        this.size = 0;
+        this.topPlate = undefined;
     }
     Push(newPlateData) {
         const newPlate = new Plate(newPlateData, this.topPlate);
+        if (!this.bottomPlate) {
+            this.bottomPlate = newPlate;
+        }
         this.topPlate = newPlate;
         this.size++;
         return this.topPlate.data;
     }
     Pop() {
-        if (!this.topPlate.lowerPlate) {
-            throw new Error('no more plates in stack');
+        if (this.size === 1) {
+            this.bottomPlate === undefined;
+        }
+        if (!this.topPlate) {
+            throw new Error('no plates to pop');
         }
         else {
             const poppedPlateData = this.topPlate.data;
@@ -40,7 +46,28 @@ class Stack {
         }
     }
     Max() {
-        return this.topPlate.max;
+        if (!this.topPlate) {
+            throw new Error('no plates in the stack');
+        }
+        else {
+            return this.topPlate.max;
+        }
+    }
+    PeakTop() {
+        if (!this.topPlate) {
+            throw new Error('no plates in the stack');
+        }
+        else {
+            return this.topPlate.data;
+        }
+    }
+    PeakBottom() {
+        if (!this.bottomPlate) {
+            throw new Error('no plates in the stack');
+        }
+        else {
+            return this.bottomPlate.data;
+        }
     }
 }
 exports.Stack = Stack;
