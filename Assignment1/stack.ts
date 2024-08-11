@@ -19,6 +19,7 @@ export class Plate {
 
 export class Stack {
   public topPlate: Plate | undefined;
+  public bottomPlate: Plate | undefined;
   public size: number;
   constructor() {
     this.size = 0;
@@ -26,11 +27,17 @@ export class Stack {
   }
   public Push(newPlateData: number) {
     const newPlate = new Plate(newPlateData, this.topPlate);
+    if (!this.bottomPlate) {
+      this.bottomPlate = newPlate;
+    }
     this.topPlate = newPlate;
     this.size++;
     return this.topPlate.data;
   }
   public Pop() {
+    if (this.size === 1) {
+      this.bottomPlate === undefined;
+    }
     if (!this.topPlate) {
       throw new Error('no plates to pop');
     } else {
@@ -45,6 +52,20 @@ export class Stack {
       throw new Error('no plates in the stack');
     } else {
       return this.topPlate.max;
+    }
+  }
+  public PeakTop() {
+    if (!this.topPlate) {
+      throw new Error('no plates in the stack');
+    } else {
+      return this.topPlate.data;
+    }
+  }
+  public PeakBottom() {
+    if (!this.bottomPlate) {
+      throw new Error('no plates in the stack');
+    } else {
+      return this.bottomPlate.data;
     }
   }
 }

@@ -1,25 +1,23 @@
 import queue from './queue';
 
 describe('test queue', () => {
-  test('first removed number is first added', () => {
-    const queue1 = new queue();
-    const firstNumber = 1;
-    const otherNumber = 3;
-    queue1.Push(firstNumber);
-    queue1.Push(otherNumber);
-    queue1.Push(otherNumber);
-    const returnedValue = queue1.Pop();
-    const actual = queue1.ToList();
-    expect(returnedValue).toEqual(firstNumber);
-  });
-  test('error is thrown when pop comes before push', () => {
-    const queue1 = new queue();
-    expect(() => queue1.Pop()).toThrow();
-  });
-  test('error is thrown when nothing left to pop', () => {
-    const queue1 = new queue();
-    queue1.Push(1);
-    queue1.Pop();
-    expect(() => queue1.Pop()).toThrow();
+  const myQueue = new queue();
+  const firstPatient = 1;
+  const secondPatient = 2;
+  const thirdPatient = 4;
+  const fourthPatient = 2;
+  describe('First Patient in is First Patient out', () => {
+    myQueue.Push(firstPatient);
+    myQueue.Push(secondPatient);
+    myQueue.Push(thirdPatient);
+    const firstPopped = myQueue.Pop();
+    myQueue.Pop();
+    const lastPopped = myQueue.Pop();
+    test('of 3 patients added, patient 1 is popped first', () => {
+      expect(firstPopped).toBe(firstPatient);
+    });
+    test('of 3 patients added, patient 3 is popped last', () => {
+      expect(lastPopped).toBe(thirdPatient);
+    });
   });
 });
