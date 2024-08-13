@@ -1,4 +1,4 @@
-import {StringStack} from './stringStack';
+import {GenericStack} from './genericStack';
 
 function isLeftBracket(bracket: string) {
   if (bracket === '(' || bracket === '{' || bracket === '[') {
@@ -22,7 +22,7 @@ function isBracketPair(poppedBracket: string, rightBracket: string) {
 
 export default function isBracketSequenceCorrect(brackets: string) {
   const bracketItems = brackets.split('');
-  const bracketStack = new StringStack();
+  const bracketStack = new GenericStack<string>();
   let i = 0;
 
   while (i < bracketItems.length) {

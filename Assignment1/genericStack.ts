@@ -1,8 +1,11 @@
-export class StringPlate {
-  public data: string;
-  public lowerPlate: StringPlate | undefined;
+export class GenericPlate<DataType> {
+  public data: DataType;
+  public lowerPlate: GenericPlate<DataType> | undefined;
 
-  constructor(newData: string, lowerPlate: StringPlate | undefined) {
+  constructor(
+    newData: DataType,
+    lowerPlate: GenericPlate<DataType> | undefined
+  ) {
     this.lowerPlate = lowerPlate;
     this.data = newData;
   }
@@ -11,16 +14,16 @@ export class StringPlate {
   }
 }
 
-export class StringStack {
-  public topPlate: StringPlate | undefined;
-  public bottomPlate: StringPlate | undefined;
+export class GenericStack<DataType> {
+  public topPlate: GenericPlate<DataType> | undefined;
+  public bottomPlate: GenericPlate<DataType> | undefined;
   public size: number;
   constructor() {
     this.size = 0;
     this.topPlate = undefined;
   }
-  public Push(newPlateData: string) {
-    const newPlate = new StringPlate(newPlateData, this.topPlate);
+  public Push(newPlateData: DataType) {
+    const newPlate = new GenericPlate(newPlateData, this.topPlate);
     if (!this.bottomPlate) {
       this.bottomPlate = newPlate;
     }
