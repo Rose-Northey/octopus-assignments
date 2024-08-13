@@ -23,10 +23,9 @@ function isBracketPair(poppedBracket: string, rightBracket: string) {
 export default function isBracketSequenceCorrect(brackets: string) {
   const bracketItems = brackets.split('');
   const bracketStack = new StringStack();
-  let noErrorFound = true;
   let i = 0;
 
-  while (noErrorFound && i < bracketItems.length) {
+  while (i < bracketItems.length) {
     const bracket = bracketItems[i];
     if (isLeftBracket(bracket)) {
       bracketStack.Push(bracket);
@@ -34,17 +33,17 @@ export default function isBracketSequenceCorrect(brackets: string) {
       try {
         const poppedBracket = bracketStack.Pop();
         if (!isBracketPair(poppedBracket, bracket)) {
-          noErrorFound = false;
+          return false;
         }
       } catch (error) {
-        noErrorFound = false;
+        return false;
       }
     }
     i++;
   }
 
   if (bracketStack.size !== 0) {
-    noErrorFound = false;
+    return false;
   }
-  return noErrorFound;
+  return true;
 }

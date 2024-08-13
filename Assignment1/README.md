@@ -34,3 +34,5 @@ when I come across a new closing bracket delete it from stack
 
  -->
 <!-- '([{ last in first out -> its a stack not a queue -->
+<!-- {{{} -->
+<!-- template stack so you can delete string stack -->
