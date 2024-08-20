@@ -1,10 +1,11 @@
 export function generateFibonacciSequence(
   nFinal: number,
-  currentSequence: number[] = [0, 1]
-): number {
+  currentSequence: bigint[] = [BigInt(0), BigInt(1)]
+): bigint {
   if (nFinal >= currentSequence.length) {
     const onePrior = currentSequence[currentSequence.length - 1];
     const twoPrior = currentSequence[currentSequence.length - 2];
+    const newInSequence = onePrior + twoPrior;
     currentSequence.push(onePrior + twoPrior);
     return generateFibonacciSequence(nFinal, currentSequence);
   } else {
