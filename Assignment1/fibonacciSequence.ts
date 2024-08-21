@@ -1,4 +1,4 @@
-export class Fibonacci {
+export class FibonacciBottomUp {
   cachedSequence: number[];
   topNumber: number;
   beforeTopNumber: number;
@@ -18,3 +18,5 @@ export class Fibonacci {
     }
   }
 }
+
+// bottom up approach done initially
