@@ -18,7 +18,6 @@ describe('test queue', () => {
       expect(firstPopped).toBe(firstPatient);
     });
     test('of 3 patients added, patient 3 is popped last', () => {
-      console.log(myQueue.queueSize);
       expect(lastPopped).toBe(thirdPatient);
     });
   });

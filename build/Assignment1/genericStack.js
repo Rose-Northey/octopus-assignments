@@ -1,29 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Stack = exports.Plate = void 0;
-class Plate {
+exports.GenericStack = exports.GenericPlate = void 0;
+class GenericPlate {
     constructor(newData, lowerPlate) {
         this.lowerPlate = lowerPlate;
         this.data = newData;
-        if (!lowerPlate || newData > lowerPlate.max) {
-            this.max = newData;
-        }
-        else {
-            this.max = lowerPlate.max;
-        }
     }
     printData() {
         return this.data;
     }
 }
-exports.Plate = Plate;
-class Stack {
+exports.GenericPlate = GenericPlate;
+class GenericStack {
     constructor() {
         this.size = 0;
         this.topPlate = undefined;
     }
     Push(newPlateData) {
-        const newPlate = new Plate(newPlateData, this.topPlate);
+        const newPlate = new GenericPlate(newPlateData, this.topPlate);
         if (!this.bottomPlate) {
             this.bottomPlate = newPlate;
         }
@@ -45,14 +39,6 @@ class Stack {
             return poppedPlateData;
         }
     }
-    Max() {
-        if (!this.topPlate) {
-            throw new Error('no plates in the stack');
-        }
-        else {
-            return this.topPlate.max;
-        }
-    }
     PeakTop() {
         if (!this.topPlate) {
             throw new Error('no plates in the stack');
@@ -70,4 +56,4 @@ class Stack {
         }
     }
 }
-exports.Stack = Stack;
+exports.GenericStack = GenericStack;
