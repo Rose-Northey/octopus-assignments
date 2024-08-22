@@ -36,7 +36,3 @@ export class stepVariationsBottomUp {
     return this.getNumberOfVariations(stepsLeft);
   }
 }
-
-export class terribleStepVariations {
-  stepCount: number;
-}
