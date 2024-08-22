@@ -15,6 +15,10 @@ export class FibonacciBottomUp {
     }
   }
 }
+// a number in JS is not the same as an integer (it's 8bytes -> because its a double precision float)
+// -> worst case scenario = linear relationship with n O(n)
+// -> best case scenario = index is simply acessed O(1) (constant)
+// space complexity -> (cachedSequence = 8n bytes) + (desired index = 4 bytes) + (return = 4 bytes) -> 8n+16 therefore space complexity is linear??
 
 export class FibonacciStore {
   cachedSequence: number[];
@@ -31,3 +35,12 @@ export class FibonacciStore {
     return this.cachedSequence[desiredIndex];
   }
 }
+
+// -> worst case scenario = linear relationship with n O(n)
+// -> best case scenario = index is simply acessed O(1)
+
+// calculate time complexity by dropping the lower order terms and also the
+// multiply the time complexity of nested loops e.g. n^2 if there are two forloops nested within eachother
+// sequential statements  -> we add the time taken for each sequential statment. and simplify as above
+// if else statments -> we consider the worst case scenario if this is the case.
+// Space Complexity -> each integer variable takes 4 bytes. Each integer is 4 bytes plus return variable is also 4 bytes if its an integer
