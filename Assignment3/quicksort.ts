@@ -1,45 +1,48 @@
 export default function quicksort(
   array: number[],
-  lowerBound = 0,
-  upperBound = array.length - 1
+  iLowerLimit = 0,
+  iUpperLimit = array.length - 1
 ) {
-  const pivot = array[lowerBound];
-  let iLeft = lowerBound + 1;
+  const pivot = array[iLowerLimit];
+  let iLeft = iLowerLimit + 1;
   const iHigherFromLeft = findIndexOfHigherFromLeft(
     array,
-    lowerBound + 1,
-    upperBound,
+    iLowerLimit + 1,
+    iUpperLimit,
     pivot
   );
   if (iHigherFromLeft === undefined) {
-    lowerBound++;
-    return quicksort(array, lowerBound, upperBound);
+    iLowerLimit++;
+    return quicksort(array, iLowerLimit, iUpperLimit);
   }
   const iLowerFromRight = findIndexOfLowerFromRight(
     array,
-    lowerBound + 1,
-    upperBound,
+    iLowerLimit + 1,
+    iUpperLimit,
     pivot
   );
   if (iLowerFromRight === undefined) {
-    const highest = array[lowerBound];
-    array[lowerBound] = array[upperBound];
-    array[upperBound] = highest;
-    upperBound--;
-    return quicksort(array, lowerBound, upperBound);
+    const highest = array[iLowerLimit];
+    array[iLowerLimit] = array[iUpperLimit];
+    array[iUpperLimit] = highest;
+    iUpperLimit--;
+    return quicksort(array, iLowerLimit, iUpperLimit);
   }
   if (iHigherFromLeft < iLowerFromRight) {
     const higher = array[iHigherFromLeft];
     array[iHigherFromLeft] = array[iLowerFromRight];
     array[iLowerFromRight] = higher;
-    return quicksort(array, lowerBound, upperBound);
+    return quicksort(array, iLowerLimit, iUpperLimit);
   }
   if (iHigherFromLeft < iLowerFromRight) {
-    array[lowerBound] = array[iLowerFromRight];
+    array[iLowerLimit] = array[iLowerFromRight];
     array[iLowerFromRight] = pivot;
-    return quicksort(array, lowerBound, i);
+    return quicksort(array, iLowerLimit, i);
   }
+  // how do I call quicksort for both the upper and lower section??
 }
+
+// when I find their true position I push them into a new array??
 //first item in the ray is pivot
 // if next number is higher than pivot, it is HigherOnLeft
 // if no items are higher than the pivot, call the function again but leave out the pivot
