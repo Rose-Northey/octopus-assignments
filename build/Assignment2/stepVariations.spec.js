@@ -1,0 +1,79 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const stepVariations_1 = require("./stepVariations");
+describe('calculate number of step variations using topDown', () => {
+    test('0 variations when steps=0', () => {
+        const steps = 0;
+        const myStepVariations = new stepVariations_1.StepVariationsTopDown();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(0);
+    });
+    test('1 variations when steps=1', () => {
+        const steps = 1;
+        const myStepVariations = new stepVariations_1.StepVariationsTopDown();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(1);
+    });
+    test('2 variations when steps=2', () => {
+        const steps = 2;
+        const myStepVariations = new stepVariations_1.StepVariationsTopDown();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(2);
+    });
+    test('3 variations when steps=3', () => {
+        const steps = 3;
+        const myStepVariations = new stepVariations_1.StepVariationsTopDown();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(3);
+    });
+    test('5 variations when steps=4', () => {
+        const steps = 4;
+        const myStepVariations = new stepVariations_1.StepVariationsTopDown();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(5);
+    });
+    test('10 variations when steps=89', () => {
+        const steps = 10;
+        const myStepVariations = new stepVariations_1.StepVariationsTopDown();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(89);
+    });
+});
+describe('calculate number of step variations using Bottom Up', () => {
+    test('0 variations when steps=0', () => {
+        const steps = 0;
+        const myStepVariations = new stepVariations_1.stepVariationsBottomUp();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(0);
+    });
+    test('1 variations when steps=1', () => {
+        const steps = 1;
+        const myStepVariations = new stepVariations_1.stepVariationsBottomUp();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(1);
+    });
+    test('2 variations when steps=2', () => {
+        const steps = 2;
+        const myStepVariations = new stepVariations_1.stepVariationsBottomUp();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(2);
+    });
+    test('3 variations when steps=3', () => {
+        const steps = 3;
+        const myStepVariations = new stepVariations_1.stepVariationsBottomUp();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(3);
+    });
+    test('5 variations when steps=4', () => {
+        const steps = 4;
+        const myStepVariations = new stepVariations_1.stepVariationsBottomUp();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(5);
+    });
+    test('10 variations when steps=89', () => {
+        const steps = 10;
+        const myStepVariations = new stepVariations_1.stepVariationsBottomUp();
+        const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
+        expect(numberOfVariations).toBe(89);
+    });
+});

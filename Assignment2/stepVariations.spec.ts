@@ -26,16 +26,16 @@ describe('calculate number of step variations using topDown', () => {
     expect(numberOfVariations).toBe(3);
   });
   test('5 variations when steps=4', () => {
-    const steps = 3;
+    const steps = 4;
     const myStepVariations = new StepVariationsTopDown();
     const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
-    expect(numberOfVariations).toBe(3);
+    expect(numberOfVariations).toBe(5);
   });
   test('10 variations when steps=89', () => {
-    const steps = 3;
+    const steps = 10;
     const myStepVariations = new StepVariationsTopDown();
     const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
-    expect(numberOfVariations).toBe(3);
+    expect(numberOfVariations).toBe(89);
   });
 });
 
@@ -65,15 +65,15 @@ describe('calculate number of step variations using Bottom Up', () => {
     expect(numberOfVariations).toBe(3);
   });
   test('5 variations when steps=4', () => {
-    const steps = 3;
+    const steps = 4;
     const myStepVariations = new stepVariationsBottomUp();
     const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
-    expect(numberOfVariations).toBe(3);
+    expect(numberOfVariations).toBe(5);
   });
   test('10 variations when steps=89', () => {
-    const steps = 3;
+    const steps = 10;
     const myStepVariations = new stepVariationsBottomUp();
     const numberOfVariations = myStepVariations.getNumberOfVariations(steps);
-    expect(numberOfVariations).toBe(3);
+    expect(numberOfVariations).toBe(89);
   });
 });
