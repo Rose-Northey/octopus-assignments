@@ -1,77 +1,58 @@
+// Make a function to sort each element into place
+
 export default function quicksort(
   array: number[],
-  iLowerLimit = 0,
-  iUpperLimit = array.length - 1
+  iPivot = 0,
+  iLastInSortRange = array.length - 1
 ) {
-  const pivot = array[iLowerLimit];
-  let iLeft = iLowerLimit + 1;
-  const iHigherFromLeft = findIndexOfHigherFromLeft(
+  const iLastLower = findIndexOfLowerFromRight(array, iPivot, iLastInSortRange);
+  const iFirstHigher = findIndexOfHigherFromLeft(
     array,
-    iLowerLimit + 1,
-    iUpperLimit,
-    pivot
+    iPivot,
+    iLastInSortRange
   );
-  if (iHigherFromLeft === undefined) {
-    iLowerLimit++;
-    return quicksort(array, iLowerLimit, iUpperLimit);
+  if (!iLastLower) {
+    iPivot++;
+  } else if (!iFirstHigher) {
+    swapValues(array, iPivot, iLastInSortRange);
+    iLastInSortRange--;
+  } else if (iFirstHigher > iLastLower) {
+    swapValues(array, iPivot, iLastLower);
+  } else if (iFirstHigher < iLastLower) {
+    swapValues(array, iFirstHigher, iLastLower);
   }
-  const iLowerFromRight = findIndexOfLowerFromRight(
-    array,
-    iLowerLimit + 1,
-    iUpperLimit,
-    pivot
-  );
-  if (iLowerFromRight === undefined) {
-    const highest = array[iLowerLimit];
-    array[iLowerLimit] = array[iUpperLimit];
-    array[iUpperLimit] = highest;
-    iUpperLimit--;
-    return quicksort(array, iLowerLimit, iUpperLimit);
+
+  if (iPivot < iLastInSortRange) {
+    return quicksort(array, iPivot, iLastInSortRange);
   }
-  if (iHigherFromLeft < iLowerFromRight) {
-    const higher = array[iHigherFromLeft];
-    array[iHigherFromLeft] = array[iLowerFromRight];
-    array[iLowerFromRight] = higher;
-    return quicksort(array, iLowerLimit, iUpperLimit);
-  }
-  if (iHigherFromLeft < iLowerFromRight) {
-    array[iLowerLimit] = array[iLowerFromRight];
-    array[iLowerFromRight] = pivot;
-    return quicksort(array, iLowerLimit, i);
-  }
-  // how do I call quicksort for both the upper and lower section??
+  return array;
 }
-
-// when I find their true position I push them into a new array??
-//first item in the ray is pivot
-// if next number is higher than pivot, it is HigherOnLeft
-// if no items are higher than the pivot, call the function again but leave out the pivot
-
-//HigherOnLeft
-//LowerOnRight
 
 function findIndexOfLowerFromRight(
   array: number[],
-  iStart: number,
-  iEnd: number,
-  pivot: number
+  iPivot: number,
+  iLastInSortRange: number
 ): number | undefined {
-  for (let i = iEnd; i >= iStart; i--) {
-    if (array[i] < pivot) {
+  for (let i = iLastInSortRange; i > iPivot; i--)
+    if (array[i] < array[iPivot]) {
       return i;
     }
-  }
 }
 
 function findIndexOfHigherFromLeft(
   array: number[],
-  iStart: number,
-  iEnd: number,
-  pivot: number
+  iPivot: number,
+  iLastInSortRange: number
 ): number | undefined {
-  for (let i = iStart; i <= iEnd; i++) {
-    if (array[i] > pivot) {
+  for (let i = iPivot + 1; i <= iLastInSortRange; i++) {
+    if (array[i] > array[iPivot]) {
       return i;
     }
   }
+}
+
+function swapValues(array: number[], iOne: number, iTwo: number): void {
+  const oldOne = array[iOne];
+  array[iOne] = array[iTwo];
+  array[iTwo] = oldOne;
 }
