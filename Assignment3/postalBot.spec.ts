@@ -1,33 +1,32 @@
-import {sortingFunctions} from './quicksort';
-// import {quicksort} from './quicksort';
+import {PostalBot} from './postalBot';
 describe('quicksortPretty', () => {
   test('sorts [3,2,4,1]', () => {
     const array = [3, 4, 2];
     const sortedArray = [2, 3, 4];
-    const mySortingFunction = new sortingFunctions();
-    const resultArray = mySortingFunction.quicksortPretty(array);
+    const UAPB = new PostalBot();
+    const resultArray = UAPB.quicksortPretty(array);
     console.log(
-      `quickSortPretty ${mySortingFunction.functionCount} iterations for ${array} array`
+      `quickSortPretty ${UAPB.recursionCount} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
   test('sorts [3,6,2,7,9,4,1]', () => {
     const array = [3, 6, 2, 7, 9, 4, 1];
     const sortedArray = [1, 2, 3, 4, 6, 7, 9];
-    const mySortingFunction = new sortingFunctions();
-    const resultArray = mySortingFunction.quicksortPretty(array);
+    const UAPB = new PostalBot();
+    const resultArray = UAPB.quicksortPretty(array);
     console.log(
-      `quickSortPretty ${mySortingFunction.functionCount} iterations for ${array} array`
+      `quickSortPretty ${UAPB.recursionCount} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
   test('correctly returns already sorted array', () => {
     const array = [1, 2, 3, 4, 6, 7, 9];
     const sortedArray = [1, 2, 3, 4, 6, 7, 9];
-    const mySortingFunction = new sortingFunctions();
-    const resultArray = mySortingFunction.quicksortPretty(array);
+    const UAPB = new PostalBot();
+    const resultArray = UAPB.quicksortPretty(array);
     console.log(
-      `quickSortPretty ${mySortingFunction.functionCount} iterations for ${array} array`
+      `quickSortPretty ${UAPB.recursionCount} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
@@ -46,43 +45,43 @@ describe('quicksortPretty', () => {
       68, 70, 72, 73, 74, 76, 77, 78, 81, 82, 86, 87, 88, 89, 90, 91, 92, 93,
       96, 97, 98, 99, 100,
     ];
-    const mySortingFunction = new sortingFunctions();
-    const resultArray = mySortingFunction.quicksortPretty(unsortedArray);
+    const UAPB = new PostalBot();
+    const resultArray = UAPB.quicksortPretty(unsortedArray);
     console.log(
-      `quickSortPretty ${mySortingFunction.functionCount} iterations for long array`
+      `quickSortPretty ${UAPB.recursionCount} iterations for long array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
 });
 
-describe('quicksortUgly', () => {
+describe('quickSort', () => {
   test('sorts [3,2,4,1]', () => {
     const array = [3, 4, 2];
     const sortedArray = [2, 3, 4];
-    const mySortingFunction = new sortingFunctions();
-    const resultArray = mySortingFunction.quicksortUgly(array);
+    const UAPB = new PostalBot();
+    const resultArray = UAPB.quickSort(array);
     console.log(
-      `quicksortUgly ${mySortingFunction.functionCount} iterations for ${array} array`
+      `quickSort ${UAPB.recursionCount} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
   test('sorts [3,6,2,7,9,4,1]', () => {
     const array = [3, 6, 2, 7, 9, 4, 1];
     const sortedArray = [1, 2, 3, 4, 6, 7, 9];
-    const mySortingFunction = new sortingFunctions();
-    const resultArray = mySortingFunction.quicksortUgly(array);
+    const UAPB = new PostalBot();
+    const resultArray = UAPB.quickSort(array);
     console.log(
-      `quicksortUgly ${mySortingFunction.functionCount} iterations for ${array} array`
+      `quickSort ${UAPB.recursionCount} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
   test('correctly returns already sorted array', () => {
     const array = [1, 2, 3, 4, 6, 7, 9];
     const sortedArray = [1, 2, 3, 4, 6, 7, 9];
-    const mySortingFunction = new sortingFunctions();
-    const resultArray = mySortingFunction.quicksortUgly(array);
+    const UAPB = new PostalBot();
+    const resultArray = UAPB.quickSort(array);
     console.log(
-      `quicksortUgly ${mySortingFunction.functionCount} iterations for ${array} array`
+      `quickSort ${UAPB.recursionCount} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
@@ -101,11 +100,9 @@ describe('quicksortUgly', () => {
       68, 70, 72, 73, 74, 76, 77, 78, 81, 82, 86, 87, 88, 89, 90, 91, 92, 93,
       96, 97, 98, 99, 100,
     ];
-    const mySortingFunction = new sortingFunctions();
-    const resultArray = mySortingFunction.quicksortUgly(unsortedArray);
-    console.log(
-      `quicksortUgly ${mySortingFunction.functionCount} iterations for long array`
-    );
+    const UAPB = new PostalBot();
+    const resultArray = UAPB.quickSort(unsortedArray);
+    console.log(`quickSort ${UAPB.recursionCount} iterations for long array`);
     expect(resultArray).toEqual(sortedArray);
   });
 });
