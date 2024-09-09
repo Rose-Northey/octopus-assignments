@@ -1,5 +1,13 @@
 import {PostalBot} from './postalBot';
 describe('quicksortPretty', () => {
+  test('returns [] when given []', () => {
+    const UAPB = new PostalBot();
+    expect(UAPB.quicksortPretty([])).toEqual([]);
+  });
+  test('returns [1] when given [1]', () => {
+    const UAPB = new PostalBot();
+    expect(UAPB.quicksortPretty([1])).toEqual([1]);
+  });
   test('sorts [3,2,4,1]', () => {
     const array = [3, 4, 2];
     const sortedArray = [2, 3, 4];
@@ -23,6 +31,16 @@ describe('quicksortPretty', () => {
   test('correctly returns already sorted array', () => {
     const array = [1, 2, 3, 4, 6, 7, 9];
     const sortedArray = [1, 2, 3, 4, 6, 7, 9];
+    const UAPB = new PostalBot();
+    const resultArray = UAPB.quicksortPretty(array);
+    console.log(
+      `quickSortPretty ${UAPB.recursionCount} iterations for ${array} array`
+    );
+    expect(resultArray).toEqual(sortedArray);
+  });
+  test('sorts array with repeated numbers', () => {
+    const array = [1, 4, 2, 1, 4];
+    const sortedArray = [1, 1, 2, 4, 4];
     const UAPB = new PostalBot();
     const resultArray = UAPB.quicksortPretty(array);
     console.log(
@@ -55,6 +73,14 @@ describe('quicksortPretty', () => {
 });
 
 describe('quickSort', () => {
+  test('returns [] when given []', () => {
+    const UAPB = new PostalBot();
+    expect(UAPB.quickSort([])).toEqual([]);
+  });
+  test('returns [1] when given [1]', () => {
+    const UAPB = new PostalBot();
+    expect(UAPB.quickSort([1])).toEqual([1]);
+  });
   test('sorts [3,2,4,1]', () => {
     const array = [3, 4, 2];
     const sortedArray = [2, 3, 4];
@@ -85,6 +111,16 @@ describe('quickSort', () => {
     );
     expect(resultArray).toEqual(sortedArray);
   });
+  test('sorts array with repeated numbers', () => {
+    const array = [1, 4, 2, 1, 4];
+    const sortedArray = [1, 1, 2, 4, 4];
+    const UAPB = new PostalBot();
+    const resultArray = UAPB.quickSort(array);
+    console.log(
+      `quickSort ${UAPB.recursionCount} iterations for ${array} array`
+    );
+    expect(resultArray).toEqual(sortedArray);
+  });
   test('sorts long array', () => {
     const unsortedArray = [
       42, 76, 15, 3, 67, 55, 9, 24, 70, 81, 5, 62, 38, 13, 20, 86, 4, 58, 11,
@@ -106,3 +142,41 @@ describe('quickSort', () => {
     expect(resultArray).toEqual(sortedArray);
   });
 });
+
+test.each([
+  {allMail: [], expectedNumberLetters: 0},
+  {allMail: [3], expectedNumberLetters: 0},
+  {allMail: [4], expectedNumberLetters: 1},
+  {allMail: [4, 1], expectedNumberLetters: 1},
+  {allMail: [7, 5, 2, 1, 7, 4, 19], expectedNumberLetters: 1},
+  {allMail: [7, 5, 2, 1, 7, 3, 19], expectedNumberLetters: 0},
+  {allMail: [7, 5, 4, 1, 7, 4, 19], expectedNumberLetters: 2},
+  {allMail: [7, 5, 4, 1, 4, 7, 4, 19, 4], expectedNumberLetters: 4},
+])(
+  'given allMail, find correct expectedNumberLetters for houseNumber 4',
+  ({allMail, expectedNumberLetters}) => {
+    const UAPB = new PostalBot();
+    UAPB.addMail(allMail);
+    const actualNumberOfLetters = UAPB.findNumberOfLettersGivenHouseNumber(4);
+    expect(actualNumberOfLetters).toBe(expectedNumberLetters);
+  }
+);
+
+test.each([
+  {allMail: []},
+  {allMail: [3]},
+  {allMail: [4]},
+  {allMail: [4, 1]},
+  {allMail: [7, 5, 2, 1, 7, 4, 19]},
+  {allMail: [7, 5, 2, 1, 7, 3, 19]},
+  {allMail: [7, 5, 4, 1, 7, 4, 19]},
+  {allMail: [7, 5, 4, 1, 4, 7, 4, 19, 4]},
+])(
+  'given allMail, ensure all mail for house number 4 is deleted from post office records',
+  ({allMail}) => {
+    const UAPB = new PostalBot();
+    UAPB.addMail(allMail);
+    UAPB.findNumberOfLettersGivenHouseNumber(4);
+    expect(UAPB.mail).not.toContain(4);
+  }
+);

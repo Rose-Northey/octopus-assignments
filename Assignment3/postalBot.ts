@@ -9,6 +9,50 @@ export class PostalBot {
     this.mail = [...incomingMail];
     this.quickSort(this.mail);
   }
+  public findNumberOfLettersGivenHouseNumber(
+    houseNumber: number,
+    iFirstLetterInSearch = 0,
+    unclaimedLettersInSearch: number = this.mail.length,
+    claimedLetterCount = 0
+  ): number {
+    if (!unclaimedLettersInSearch) {
+      return claimedLetterCount;
+    }
+    const rangeMid =
+      Math.floor(unclaimedLettersInSearch / 2) + iFirstLetterInSearch;
+
+    if (houseNumber === this.mail[rangeMid]) {
+      this.mail.splice(rangeMid, 1);
+      return this.findNumberOfLettersGivenHouseNumber(
+        houseNumber,
+        iFirstLetterInSearch,
+        --unclaimedLettersInSearch,
+        ++claimedLetterCount
+      );
+    }
+
+    if (houseNumber < this.mail[rangeMid]) {
+      const numberLettersInLowerHalfOfSearch =
+        rangeMid - iFirstLetterInSearch - 1;
+      return this.findNumberOfLettersGivenHouseNumber(
+        houseNumber,
+        iFirstLetterInSearch,
+        numberLettersInLowerHalfOfSearch,
+        claimedLetterCount
+      );
+    }
+    if (houseNumber > this.mail[rangeMid]) {
+      const numberLettersInUpperHalfOfSearch =
+        unclaimedLettersInSearch - rangeMid;
+      return this.findNumberOfLettersGivenHouseNumber(
+        houseNumber,
+        rangeMid + 1,
+        numberLettersInUpperHalfOfSearch,
+        claimedLetterCount
+      );
+    }
+    return claimedLetterCount;
+  }
 
   public quickSort(
     array: number[],
