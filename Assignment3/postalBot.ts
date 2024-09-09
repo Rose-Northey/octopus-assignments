@@ -1,57 +1,54 @@
 export class PostalBot {
-  recursionCount: number;
+  countRecursiveCalls: number;
   mail: number[];
   constructor() {
-    this.recursionCount = 0;
+    this.countRecursiveCalls = 0;
     this.mail = [];
   }
   public addMail(incomingMail: number[]): void {
     this.mail = [...incomingMail];
     this.quickSort(this.mail);
   }
-  public findNumberOfLettersGivenHouseNumber(
+  public getMailCountForHouseNumber(
     houseNumber: number,
-    iFirstLetterInSearch = 0,
-    unclaimedLettersInSearch: number = this.mail.length,
-    claimedLetterCount = 0
+    startIndex = 0,
+    searchRangeSize: number = this.mail.length,
+    mailCountForHouse = 0
   ): number {
-    if (!unclaimedLettersInSearch) {
-      return claimedLetterCount;
+    if (!searchRangeSize) {
+      return mailCountForHouse;
     }
-    const rangeMid =
-      Math.floor(unclaimedLettersInSearch / 2) + iFirstLetterInSearch;
+    const midRangeIndex = Math.floor(searchRangeSize / 2) + startIndex;
 
-    if (houseNumber === this.mail[rangeMid]) {
-      this.mail.splice(rangeMid, 1);
-      return this.findNumberOfLettersGivenHouseNumber(
+    if (houseNumber === this.mail[midRangeIndex]) {
+      this.mail.splice(midRangeIndex, 1);
+      return this.getMailCountForHouseNumber(
         houseNumber,
-        iFirstLetterInSearch,
-        --unclaimedLettersInSearch,
-        ++claimedLetterCount
+        startIndex,
+        --searchRangeSize,
+        ++mailCountForHouse
       );
     }
 
-    if (houseNumber < this.mail[rangeMid]) {
-      const numberLettersInLowerHalfOfSearch =
-        rangeMid - iFirstLetterInSearch - 1;
-      return this.findNumberOfLettersGivenHouseNumber(
+    if (houseNumber < this.mail[midRangeIndex]) {
+      const lowerHalfLetterCount = midRangeIndex - startIndex - 1;
+      return this.getMailCountForHouseNumber(
         houseNumber,
-        iFirstLetterInSearch,
-        numberLettersInLowerHalfOfSearch,
-        claimedLetterCount
+        startIndex,
+        lowerHalfLetterCount,
+        mailCountForHouse
       );
     }
-    if (houseNumber > this.mail[rangeMid]) {
-      const numberLettersInUpperHalfOfSearch =
-        unclaimedLettersInSearch - rangeMid;
-      return this.findNumberOfLettersGivenHouseNumber(
+    if (houseNumber > this.mail[midRangeIndex]) {
+      const upperHalfLetterCount = searchRangeSize - midRangeIndex;
+      return this.getMailCountForHouseNumber(
         houseNumber,
-        rangeMid + 1,
-        numberLettersInUpperHalfOfSearch,
-        claimedLetterCount
+        midRangeIndex + 1,
+        upperHalfLetterCount,
+        mailCountForHouse
       );
     }
-    return claimedLetterCount;
+    return mailCountForHouse;
   }
 
   public quickSort(
@@ -59,7 +56,7 @@ export class PostalBot {
     iPivot = 0,
     iLastInSortRange = array.length - 1
   ): number[] {
-    this.recursionCount++;
+    this.countRecursiveCalls++;
     const iLastLower = this.findIndexOfLowerFromRight(
       array,
       iPivot,
@@ -113,12 +110,12 @@ export class PostalBot {
     array[iTwo] = oldOne;
   }
   public quicksortPretty(array: number[]): number[] {
-    this.recursionCount++;
+    this.countRecursiveCalls++;
     if (array.length <= 1) {
       return array;
     }
 
-    const pivot = this.findOptimisedPivot(array);
+    const pivot = this.getOptimalPivot(array);
     const highArray = [];
     const lowArray = [];
 
@@ -135,7 +132,7 @@ export class PostalBot {
       ...this.quicksortPretty(highArray),
     ];
   }
-  findOptimisedPivot(array: number[]): number {
+  getOptimalPivot(array: number[]): number {
     if (array.length > 3) {
       const arrayMiddleIndex = Math.floor(array.length / 2);
       const optimalPivot = this.quicksortPretty([

@@ -14,7 +14,7 @@ describe('quicksortPretty', () => {
     const UAPB = new PostalBot();
     const resultArray = UAPB.quicksortPretty(array);
     console.log(
-      `quickSortPretty ${UAPB.recursionCount} iterations for ${array} array`
+      `quickSortPretty ${UAPB.countRecursiveCalls} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
@@ -24,7 +24,7 @@ describe('quicksortPretty', () => {
     const UAPB = new PostalBot();
     const resultArray = UAPB.quicksortPretty(array);
     console.log(
-      `quickSortPretty ${UAPB.recursionCount} iterations for ${array} array`
+      `quickSortPretty ${UAPB.countRecursiveCalls} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
@@ -34,7 +34,7 @@ describe('quicksortPretty', () => {
     const UAPB = new PostalBot();
     const resultArray = UAPB.quicksortPretty(array);
     console.log(
-      `quickSortPretty ${UAPB.recursionCount} iterations for ${array} array`
+      `quickSortPretty ${UAPB.countRecursiveCalls} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
@@ -44,7 +44,7 @@ describe('quicksortPretty', () => {
     const UAPB = new PostalBot();
     const resultArray = UAPB.quicksortPretty(array);
     console.log(
-      `quickSortPretty ${UAPB.recursionCount} iterations for ${array} array`
+      `quickSortPretty ${UAPB.countRecursiveCalls} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
@@ -66,7 +66,7 @@ describe('quicksortPretty', () => {
     const UAPB = new PostalBot();
     const resultArray = UAPB.quicksortPretty(unsortedArray);
     console.log(
-      `quickSortPretty ${UAPB.recursionCount} iterations for long array`
+      `quickSortPretty ${UAPB.countRecursiveCalls} iterations for long array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
@@ -87,7 +87,7 @@ describe('quickSort', () => {
     const UAPB = new PostalBot();
     const resultArray = UAPB.quickSort(array);
     console.log(
-      `quickSort ${UAPB.recursionCount} iterations for ${array} array`
+      `quickSort ${UAPB.countRecursiveCalls} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
@@ -97,7 +97,7 @@ describe('quickSort', () => {
     const UAPB = new PostalBot();
     const resultArray = UAPB.quickSort(array);
     console.log(
-      `quickSort ${UAPB.recursionCount} iterations for ${array} array`
+      `quickSort ${UAPB.countRecursiveCalls} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
@@ -107,7 +107,7 @@ describe('quickSort', () => {
     const UAPB = new PostalBot();
     const resultArray = UAPB.quickSort(array);
     console.log(
-      `quickSort ${UAPB.recursionCount} iterations for ${array} array`
+      `quickSort ${UAPB.countRecursiveCalls} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
@@ -117,7 +117,7 @@ describe('quickSort', () => {
     const UAPB = new PostalBot();
     const resultArray = UAPB.quickSort(array);
     console.log(
-      `quickSort ${UAPB.recursionCount} iterations for ${array} array`
+      `quickSort ${UAPB.countRecursiveCalls} iterations for ${array} array`
     );
     expect(resultArray).toEqual(sortedArray);
   });
@@ -138,7 +138,9 @@ describe('quickSort', () => {
     ];
     const UAPB = new PostalBot();
     const resultArray = UAPB.quickSort(unsortedArray);
-    console.log(`quickSort ${UAPB.recursionCount} iterations for long array`);
+    console.log(
+      `quickSort ${UAPB.countRecursiveCalls} iterations for long array`
+    );
     expect(resultArray).toEqual(sortedArray);
   });
 });
@@ -157,7 +159,7 @@ test.each([
   ({allMail, expectedNumberLetters}) => {
     const UAPB = new PostalBot();
     UAPB.addMail(allMail);
-    const actualNumberOfLetters = UAPB.findNumberOfLettersGivenHouseNumber(4);
+    const actualNumberOfLetters = UAPB.getMailCountForHouseNumber(4);
     expect(actualNumberOfLetters).toBe(expectedNumberLetters);
   }
 );
@@ -176,7 +178,7 @@ test.each([
   ({allMail}) => {
     const UAPB = new PostalBot();
     UAPB.addMail(allMail);
-    UAPB.findNumberOfLettersGivenHouseNumber(4);
+    UAPB.getMailCountForHouseNumber(4);
     expect(UAPB.mail).not.toContain(4);
   }
 );
