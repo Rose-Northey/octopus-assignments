@@ -31,19 +31,4 @@ Since UAPB is a robot, it naturally prefers binary operations. Implement a binar
 
 Bob’s Postal Service has expanded to include package collection. Packages arrive throughout the day and can be picked up randomly. Due to quantum mechanical constraints, UAPB cannot store packages in a list like it does with mail; instead, it must use a binary tree. Implement a Binary Search Tree that allows UAPB to add, remove, and find packages by address number. The tree must remain balanced; otherwise, UAPB might tip over!
 
-3241
--> 3 is pivot
--> higher@i=2  
--> lower@i=3
--> 3214
--> higher@i=2
--> lower@i=3
--> SWAP PIVOT
--> 1234
--> higher@i=1
--> lower@i= doesn't exist
--> 234
--> 34
--> 4
 
-2(53)7(98)
