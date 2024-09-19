@@ -3,15 +3,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostalBot = void 0;
 class PostalBot {
     constructor() {
-        this.recursionCount = 0;
+        this.countRecursiveCalls = 0;
         this.mail = [];
     }
     addMail(incomingMail) {
         this.mail = [...incomingMail];
         this.quickSort(this.mail);
     }
+    getMailCountForHouseNumber(houseNumber, startIndex = 0, searchRangeSize = this.mail.length, mailCountForHouse = 0) {
+        if (!searchRangeSize) {
+            return mailCountForHouse;
+        }
+        const midRangeIndex = Math.floor(searchRangeSize / 2) + startIndex;
+        if (houseNumber === this.mail[midRangeIndex]) {
+            this.mail.splice(midRangeIndex, 1);
+            return this.getMailCountForHouseNumber(houseNumber, startIndex, --searchRangeSize, ++mailCountForHouse);
+        }
+        if (houseNumber < this.mail[midRangeIndex]) {
+            const lowerHalfLetterCount = midRangeIndex - startIndex - 1;
+            return this.getMailCountForHouseNumber(houseNumber, startIndex, lowerHalfLetterCount, mailCountForHouse);
+        }
+        if (houseNumber > this.mail[midRangeIndex]) {
+            const upperHalfLetterCount = searchRangeSize - midRangeIndex;
+            return this.getMailCountForHouseNumber(houseNumber, midRangeIndex + 1, upperHalfLetterCount, mailCountForHouse);
+        }
+        return mailCountForHouse;
+    }
     quickSort(array, iPivot = 0, iLastInSortRange = array.length - 1) {
-        this.recursionCount++;
+        this.countRecursiveCalls++;
         const iLastLower = this.findIndexOfLowerFromRight(array, iPivot, iLastInSortRange);
         const iFirstHigher = this.findIndexOfHigherFromLeft(array, iPivot, iLastInSortRange);
         if (!iLastLower) {
@@ -51,11 +70,11 @@ class PostalBot {
         array[iTwo] = oldOne;
     }
     quicksortPretty(array) {
-        this.recursionCount++;
+        this.countRecursiveCalls++;
         if (array.length <= 1) {
             return array;
         }
-        const pivot = this.findOptimisedPivot(array);
+        const pivot = this.getOptimalPivot(array);
         const highArray = [];
         const lowArray = [];
         for (let i = 1; i < array.length; i++) {
@@ -72,7 +91,7 @@ class PostalBot {
             ...this.quicksortPretty(highArray),
         ];
     }
-    findOptimisedPivot(array) {
+    getOptimalPivot(array) {
         if (array.length > 3) {
             const arrayMiddleIndex = Math.floor(array.length / 2);
             const optimalPivot = this.quicksortPretty([
