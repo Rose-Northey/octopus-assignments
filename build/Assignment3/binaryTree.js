@@ -55,11 +55,7 @@ class BinaryTree {
     }
     addPackage(houseNumber) {
         const incomingPackage = new nodule(undefined, undefined, undefined, houseNumber);
-        addToSortedArray(incomingPackage);
-        balanceTree();
     }
-    addToSortedArray(incomingPackage) { }
-    balanceTree() { }
 }
 exports.BinaryTree = BinaryTree;
 // items will be added one at a time

@@ -1,19 +1,11 @@
-class nodule {
-  parent: nodule | undefined;
-  left: nodule | undefined;
-  right: nodule | undefined;
+class Parcel {
+  parent: Parcel | undefined;
+  left: Parcel | undefined;
+  right: Parcel | undefined;
   height: number;
   balance: number;
   houseNumber: number;
-  constructor(
-    parent: nodule | undefined,
-    left: nodule | undefined,
-    right: nodule | undefined,
-    houseNumber: number
-  ) {
-    this.parent = parent;
-    this.left = left;
-    this.right = right;
+  constructor(houseNumber: number) {
     this.houseNumber = houseNumber;
     this.balance = 0;
     this.height = 1;
@@ -21,8 +13,15 @@ class nodule {
   calculateBalance = () => {
     this.balance = (this.left?.height ?? 0) - (this.right?.height ?? 0);
   };
-  calculateHeight = () => {
-    1 + Math.max(this.left?.height ?? 0, this.right?.height ?? 0);
+  calculateHeightAndBalance = () => {
+    const oldHeight = this.height;
+    this.height = 1 + Math.max(this.left?.height ?? 0, this.right?.height ?? 0);
+    this.balance = (this.left?.height ?? 0) - (this.right?.height ?? 0);
+    if (this.height === oldHeight || !this.parent) {
+      return;
+    } else {
+      this.parent.calculateHeightAndBalance();
+    }
   };
   determineRotationType = () => {
     if (this.balance > 1) {
@@ -45,7 +44,7 @@ class nodule {
       }
     }
   };
-  leftRotation = (rotatingNode: nodule) => {
+  leftRotation = (rotatingNode: Parcel) => {
     // node y = one underneath
     // node x = one ontop
   };
@@ -56,27 +55,28 @@ class nodule {
 
 // height left - height right
 
-export class BinaryTree {
-  root: nodule | undefined;
-  sortedArray: nodule[];
-  constructor() {
-    this.sortedArray = [];
-    this.root = undefined;
+export class ParcelTree {
+  root: Parcel | undefined;
+  public addParcel(houseNumber: number) {
+    const incomingParcel = new Parcel(houseNumber);
+    if (!this.root) {
+      this.root = incomingParcel;
+    } else {
+      if (incomingParcel.houseNumber <= this.root.houseNumber) {
+        this.root.left = incomingParcel;
+      } else {
+        this.root.right = incomingParcel;
+      }
+      incomingParcel.parent = this.root;
+      incomingParcel.parent.calculateHeightAndBalance();
+    }
   }
-  public addPackage(houseNumber: number) {
-    const incomingPackage = new nodule(
-      undefined,
-      undefined,
-      undefined,
-      houseNumber
-    );
-    addToSortedArray(incomingPackage);
-    balanceTree();
-  }
-
-  addToSortedArray(incomingPackage: nodule) {}
-  balanceTree() {}
 }
+
+// findPlacement
+// start at the root
+// if < root.houseNUmber -> {{put in left}}
+// {{{make root the parent of the new node}}}
 
 // items will be added one at a time
 // first item goes in the root
