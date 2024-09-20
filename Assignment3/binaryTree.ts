@@ -44,9 +44,15 @@ class Parcel {
   leftRotation = (rotatingNode: Parcel) => {
     // node y = one underneath
     // node x = one ontop
+    // set lower as the parent by disowning the upper and grandparent adopting the lower
+    // place the upper starting with the lower one
   };
 }
-// 6,7
+//  5
+// 4 6
+//    7
+//      8
+
 // if there are children, take the tallest child height +1
 // if there are no children, height = 1
 
@@ -82,6 +88,14 @@ export class ParcelTree {
         this.placeParcel(homelessParcel, potentialParent.right);
       }
     }
+  }
+  leftRotation(rotatingParcel: Parcel) {
+    if (!rotatingParcel.parent) {
+      this.root = rotatingParcel.right;
+    } else {
+      rotatingParcel.parent.right = rotatingParcel.right;
+    }
+    this.placeParcel(rotatingParcel, rotatingParcel.right!);
   }
 }
 
