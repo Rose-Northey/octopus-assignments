@@ -57,18 +57,33 @@ class Parcel {
 
 export class ParcelTree {
   root: Parcel | undefined;
+
   public addParcel(houseNumber: number) {
     const incomingParcel = new Parcel(houseNumber);
     if (!this.root) {
       this.root = incomingParcel;
+      return;
     } else {
-      if (incomingParcel.houseNumber <= this.root.houseNumber) {
-        this.root.left = incomingParcel;
+      this.findParcelHome(incomingParcel, this.root);
+    }
+  }
+  findParcelHome(homelessParcel: Parcel, potentialParent: Parcel) {
+    if (homelessParcel.houseNumber <= potentialParent.houseNumber) {
+      if (!potentialParent.left) {
+        potentialParent.left = homelessParcel;
+        homelessParcel.parent = potentialParent;
+        homelessParcel.parent.calculateHeightAndBalance();
       } else {
-        this.root.right = incomingParcel;
+        this.findParcelHome(homelessParcel, potentialParent.left);
       }
-      incomingParcel.parent = this.root;
-      incomingParcel.parent.calculateHeightAndBalance();
+    } else {
+      if (!potentialParent.right) {
+        potentialParent.right = homelessParcel;
+        homelessParcel.parent = potentialParent;
+        homelessParcel.parent.calculateHeightAndBalance();
+      } else {
+        this.findParcelHome(homelessParcel, potentialParent.right);
+      }
     }
   }
 }
