@@ -2,10 +2,9 @@ import {ParcelTree} from './binaryTree';
 describe('add parcels to tree', () => {
   describe('correctly create one node tree', () => {
     const myParcelTree = new ParcelTree();
-    const newParcelDestination = 6;
-    myParcelTree.addParcel(newParcelDestination);
+    myParcelTree.addParcel(6);
     test('one package is added to right place', () => {
-      expect(myParcelTree.root?.houseNumber).toBe(newParcelDestination);
+      expect(myParcelTree.root?.houseNumber).toBe(6);
     });
     test('calculate height', () => {
       expect(myParcelTree.root?.height).toBe(1);
@@ -16,8 +15,7 @@ describe('add parcels to tree', () => {
   });
   describe('correctly create tree with root and one leaf', () => {
     const myParcelTree = new ParcelTree();
-    const newParcelDestination = 6;
-    myParcelTree.addParcel(newParcelDestination);
+    myParcelTree.addParcel(6);
     myParcelTree.addParcel(5);
     test('adds left child', () => {
       expect(myParcelTree.root?.left?.houseNumber).toBe(5);
@@ -34,8 +32,7 @@ describe('add parcels to tree', () => {
   });
   describe('correctly create tree with root, and two leafs', () => {
     const myParcelTree = new ParcelTree();
-    const newParcelDestination = 6;
-    myParcelTree.addParcel(newParcelDestination);
+    myParcelTree.addParcel(6);
     myParcelTree.addParcel(5);
     myParcelTree.addParcel(7);
     test('adds right child', () => {
@@ -62,5 +59,19 @@ describe('add parcels to tree', () => {
     test('adds aditional child to the left of the left', () => {
       expect(myParcelTree.root?.left?.left?.houseNumber).toBe(4);
     });
+    test('root balance is correct with 3 parcels beneath (slightly left heavy)', () => {
+      expect(myParcelTree.root?.balance).toBe(1);
+    });
+    test('root height is correct with 3 parcels beneath (slightly left heavy)', () => {
+      expect(myParcelTree.root?.height).toBe(3);
+    });
   });
+});
+
+describe('correctly left rotates 3 node tree', () => {
+  const myParcelTree = new ParcelTree();
+  myParcelTree.addParcel(6);
+  myParcelTree.addParcel(7);
+  myParcelTree.addParcel(8);
+  expect(myParcelTree.root?.houseNumber).toBe(7);
 });

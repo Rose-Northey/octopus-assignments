@@ -10,9 +10,6 @@ class Parcel {
     this.balance = 0;
     this.height = 1;
   }
-  calculateBalance = () => {
-    this.balance = (this.left?.height ?? 0) - (this.right?.height ?? 0);
-  };
   calculateHeightAndBalance = () => {
     const oldHeight = this.height;
     this.height = 1 + Math.max(this.left?.height ?? 0, this.right?.height ?? 0);
@@ -49,7 +46,7 @@ class Parcel {
     // node x = one ontop
   };
 }
-
+// 6,7
 // if there are children, take the tallest child height +1
 // if there are no children, height = 1
 
@@ -64,17 +61,17 @@ export class ParcelTree {
       this.root = incomingParcel;
       return;
     } else {
-      this.findParcelHome(incomingParcel, this.root);
+      this.placeParcel(incomingParcel, this.root);
     }
   }
-  findParcelHome(homelessParcel: Parcel, potentialParent: Parcel) {
+  placeParcel(homelessParcel: Parcel, potentialParent: Parcel) {
     if (homelessParcel.houseNumber <= potentialParent.houseNumber) {
       if (!potentialParent.left) {
         potentialParent.left = homelessParcel;
         homelessParcel.parent = potentialParent;
         homelessParcel.parent.calculateHeightAndBalance();
       } else {
-        this.findParcelHome(homelessParcel, potentialParent.left);
+        this.placeParcel(homelessParcel, potentialParent.left);
       }
     } else {
       if (!potentialParent.right) {
@@ -82,7 +79,7 @@ export class ParcelTree {
         homelessParcel.parent = potentialParent;
         homelessParcel.parent.calculateHeightAndBalance();
       } else {
-        this.findParcelHome(homelessParcel, potentialParent.right);
+        this.placeParcel(homelessParcel, potentialParent.right);
       }
     }
   }
