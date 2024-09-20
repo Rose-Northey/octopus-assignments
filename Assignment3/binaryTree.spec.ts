@@ -73,5 +73,11 @@ describe('correctly left rotates 3 node tree', () => {
   myParcelTree.addParcel(6);
   myParcelTree.addParcel(7);
   myParcelTree.addParcel(8);
-  expect(myParcelTree.root?.houseNumber).toBe(7);
+  console.log(`root houseNumber is ${myParcelTree.root?.houseNumber}`);
+  console.log(
+    `child houseNumbers are ${myParcelTree.root?.right?.houseNumber}`
+  );
+  test('successfully rotates to the left', () => {
+    expect(myParcelTree.root?.houseNumber).toBe(7);
+  });
 });

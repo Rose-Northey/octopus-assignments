@@ -10,53 +10,7 @@ class Parcel {
     this.balance = 0;
     this.height = 1;
   }
-  calculateHeightAndBalance = () => {
-    const oldHeight = this.height;
-    this.height = 1 + Math.max(this.left?.height ?? 0, this.right?.height ?? 0);
-    this.balance = (this.left?.height ?? 0) - (this.right?.height ?? 0);
-    if (this.height === oldHeight || !this.parent) {
-      return;
-    } else {
-      this.parent.calculateHeightAndBalance();
-    }
-  };
-  determineRotationType = () => {
-    if (this.balance > 1) {
-      if ((this.left?.balance ?? 0) > 0) {
-        // perform RIGHT rotation
-      }
-      if ((this.left?.balance ?? 0) < 0) {
-        // perform LEFT RIGHT rotation
-      }
-    }
-    if (this.balance < -1) {
-      if ((this.right?.balance ?? 0) < 0) {
-        // RIGHT
-        // perform right totation on this node
-      }
-      if ((this.right?.balance ?? 0) > 0) {
-        // LEFT RIGHT
-        // perform left rotation on right node
-        // perform right rotation on this node
-      }
-    }
-  };
-  leftRotation = (rotatingNode: Parcel) => {
-    // node y = one underneath
-    // node x = one ontop
-    // set lower as the parent by disowning the upper and grandparent adopting the lower
-    // place the upper starting with the lower one
-  };
 }
-//  5
-// 4 6
-//    7
-//      8
-
-// if there are children, take the tallest child height +1
-// if there are no children, height = 1
-
-// height left - height right
 
 export class ParcelTree {
   root: Parcel | undefined;
@@ -70,12 +24,32 @@ export class ParcelTree {
       this.placeParcel(incomingParcel, this.root);
     }
   }
+  calculateHeightAndBalance = (parcel: Parcel) => {
+    const left = parcel.left;
+    const right = parcel.right;
+    const parent = parcel.parent;
+    const oldHeight = parcel.height;
+
+    parcel.height = 1 + Math.max(left?.height ?? 0, right?.height ?? 0);
+    parcel.balance = (left?.height ?? 0) - (right?.height ?? 0);
+
+    if (parcel.balance < -1 || parcel.balance > 1) {
+      this.rotateParcel(parcel);
+    }
+
+    if (parcel.height === oldHeight || !parent) {
+      return;
+    } else {
+      this.calculateHeightAndBalance(parent);
+    }
+  };
+
   placeParcel(homelessParcel: Parcel, potentialParent: Parcel) {
     if (homelessParcel.houseNumber <= potentialParent.houseNumber) {
       if (!potentialParent.left) {
         potentialParent.left = homelessParcel;
         homelessParcel.parent = potentialParent;
-        homelessParcel.parent.calculateHeightAndBalance();
+        this.calculateHeightAndBalance(homelessParcel);
       } else {
         this.placeParcel(homelessParcel, potentialParent.left);
       }
@@ -83,28 +57,50 @@ export class ParcelTree {
       if (!potentialParent.right) {
         potentialParent.right = homelessParcel;
         homelessParcel.parent = potentialParent;
-        homelessParcel.parent.calculateHeightAndBalance();
+        this.calculateHeightAndBalance(homelessParcel.parent);
       } else {
         this.placeParcel(homelessParcel, potentialParent.right);
       }
     }
   }
-  leftRotation(rotatingParcel: Parcel) {
-    if (!rotatingParcel.parent) {
-      this.root = rotatingParcel.right;
+  leftRotation(parcel: Parcel) {
+    const parent = parcel.parent;
+    const replacementParcel = parcel.right;
+    if (!parent && replacementParcel) {
+      this.root = replacementParcel;
+      this.root.parent = undefined;
+    } else if (parent && replacementParcel) {
+      parent.right = replacementParcel;
+    } else if (replacementParcel) {
+      this.placeParcel(parcel, replacementParcel);
     } else {
-      rotatingParcel.parent.right = rotatingParcel.right;
+      console.log('something went wrong 1');
     }
-    this.placeParcel(rotatingParcel, rotatingParcel.right!);
   }
+
+  //  5
+  // 4 6
+  //    7
+  //     8
+  rotateParcel = (parcel: Parcel) => {
+    this.leftRotation(parcel);
+    // if (parcel.balance > 1) {
+    //   if ((parcel.left?.balance ?? 0) > 0) {
+    //     // perform RIGHT rotation
+    //   }
+    //   if ((parcel.left?.balance ?? 0) < 0) {
+    //     // perform LEFT RIGHT rotation
+    //   }
+    // }
+    // if (parcel.balance < -1) {
+    //   if ((parcel.right?.balance ?? 0) < 0) {
+
+    //   }
+    //   if ((parcel.right?.balance ?? 0) > 0) {
+    //     // LEFT RIGHT
+    //     // perform left rotation on right node
+    //     // perform right rotation on this node
+    //   }
+    // }
+  };
 }
-
-// findPlacement
-// start at the root
-// if < root.houseNUmber -> {{put in left}}
-// {{{make root the parent of the new node}}}
-
-// items will be added one at a time
-// first item goes in the root
-// create an ordered list and also have it be the root
-//
