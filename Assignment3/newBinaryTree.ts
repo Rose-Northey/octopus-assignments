@@ -26,7 +26,7 @@ export class ParcelTree {
       if (!parcelInTree.left) {
         parcelInTree.left = parcelToPlace;
         parcelToPlace.parent = parcelInTree;
-        this.recalculateHeightsAndBalancesOfBranch(parcelToPlace);
+        this.recalculateHeightsAndBalancesOfParents(parcelToPlace);
       } else {
         this.placeParcel(parcelInTree.left, parcelToPlace);
       }
@@ -34,7 +34,7 @@ export class ParcelTree {
       if (!parcelInTree.right) {
         parcelInTree.right = parcelToPlace;
         parcelToPlace.parent = parcelInTree;
-        this.recalculateHeightsAndBalancesOfBranch(parcelToPlace);
+        this.recalculateHeightsAndBalancesOfParents(parcelToPlace);
       } else {
         this.placeParcel(parcelInTree.right, parcelToPlace);
       }
@@ -42,19 +42,20 @@ export class ParcelTree {
     return;
   }
 
-  recalculateHeightsAndBalancesOfBranch(parcel: Parcel) {
+  recalculateHeightsAndBalancesOfParents(parcel: Parcel) {
     if (parcel.parent) {
       parcel.parent.height = this.calculateHeight(parcel.parent);
       parcel.parent.balance = this.calculateBalance(parcel.parent);
       if (Math.abs(parcel.parent.balance) > 1) {
         this.rebalanceBranch(parcel.parent);
       } else {
-        this.recalculateHeightsAndBalancesOfBranch(parcel.parent);
+        this.recalculateHeightsAndBalancesOfParents(parcel.parent);
       }
     }
     return;
   }
   calculateHeight(parcel: Parcel) {
+    console.log(`the parcel being recalculated is ${parcel.data}`);
     return 1 + Math.max(parcel.left?.height ?? 0, parcel.right?.height ?? 0);
   }
   calculateBalance(parcel: Parcel) {
@@ -64,12 +65,15 @@ export class ParcelTree {
     if (unbalancedParcel.balance > 1 && unbalancedParcel.left) {
       if (unbalancedParcel.left?.balance > 0) {
         console.log('right rotation');
+
         const newTop = unbalancedParcel.left;
         if (unbalancedParcel === this.root) {
           this.root = newTop;
         }
+        newTop.parent = unbalancedParcel.parent;
         unbalancedParcel.left = undefined;
         unbalancedParcel.height = this.calculateHeight(unbalancedParcel);
+        unbalancedParcel.balance = this.calculateBalance(unbalancedParcel);
         this.placeParcel(newTop, unbalancedParcel);
         //   newTop = left
         // if unbalanced parcel === root then the new root is NewTop
