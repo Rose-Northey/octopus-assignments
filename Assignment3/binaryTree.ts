@@ -29,11 +29,12 @@ export class ParcelTree {
     const right = parcel.right;
     const parent = parcel.parent;
     const oldHeight = parcel.height;
+    const absBalance = Math.abs(parcel.balance);
 
     parcel.height = 1 + Math.max(left?.height ?? 0, right?.height ?? 0);
     parcel.balance = (left?.height ?? 0) - (right?.height ?? 0);
 
-    if (parcel.balance < -1 || parcel.balance > 1) {
+    if (absBalance > 1) {
       this.rotateParcel(parcel);
     }
 
@@ -66,9 +67,11 @@ export class ParcelTree {
   leftRotation(parcel: Parcel) {
     const parent = parcel.parent;
     const replacementParcel = parcel.right;
+    //if the rotation will create a new root (i.e. parent does not exist)
     if (!parent && replacementParcel) {
       this.root = replacementParcel;
       this.root.parent = undefined;
+      // else if the node has a
     } else if (parent && replacementParcel) {
       parent.right = replacementParcel;
     } else if (replacementParcel) {
