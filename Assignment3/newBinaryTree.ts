@@ -22,8 +22,6 @@ export class ParcelTree {
     } else this.placeParcel(this.root, newParcel);
   }
   placeParcel(parcelInTree: Parcel, parcelToPlace: Parcel) {
-    //   determine whether we place on left
-    // if left is empty, place parcel there, if not, run placeParcelAgain
     if (parcelToPlace.data <= parcelInTree.data) {
       if (!parcelInTree.left) {
         parcelInTree.left = parcelToPlace;
@@ -44,25 +42,15 @@ export class ParcelTree {
     return;
   }
 
-  //   findParcelPlace and then PlaceParcel -> calculate height and balance happen after the parcel is placed.
-  // after you say ParcelInTree.left = parcelToPlace then you calculate the height of the parent going up until there is no parent
-  selectSideForPlacement(parent: Parcel, parcel: Parcel): Parcel | undefined {
-    if (parcel.data <= parent.data) {
-      return parent.left;
-    } else {
-      return parent.right;
-    }
-  }
-
   recalculateHeightsAndBalancesOfBranch(parcel: Parcel) {
-    console.log(
-      `the parcel is ${parcel.data}, the parent is ${parcel.parent?.data}`
-    );
     if (parcel.parent) {
-      // the parent exists therefore recalculate the parcel's parent's height
       parcel.parent.height = this.calculateHeight(parcel.parent);
       parcel.parent.balance = this.calculateBalance(parcel.parent);
-      this.recalculateHeightsAndBalancesOfBranch(parcel.parent);
+      if (Math.abs(parcel.parent.balance) > 1) {
+        this.rebalanceBranch(parcel.parent);
+      } else {
+        this.recalculateHeightsAndBalancesOfBranch(parcel.parent);
+      }
     }
     return;
   }
@@ -71,5 +59,22 @@ export class ParcelTree {
   }
   calculateBalance(parcel: Parcel) {
     return (parcel.left?.height ?? 0) - (parcel.right?.height ?? 0);
+  }
+  rebalanceBranch(unbalancedParcel: Parcel) {
+    if (unbalancedParcel.balance > 1 && unbalancedParcel.left) {
+      if (unbalancedParcel.left?.balance > 0) {
+        console.log('right rotation');
+      }
+      if (unbalancedParcel.left?.balance < 0) {
+        console.log('rightLeft rotation');
+      }
+    } else if (unbalancedParcel.balance < -1 && unbalancedParcel.right) {
+      if (unbalancedParcel.right?.balance < 0) {
+        console.log('left rotation');
+      }
+      if (unbalancedParcel.right?.balance > 0) {
+        console.log('leftRight rotation');
+      }
+    }
   }
 }
