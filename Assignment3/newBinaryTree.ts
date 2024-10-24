@@ -64,15 +64,25 @@ export class ParcelTree {
     if (unbalancedParcel.balance > 1 && unbalancedParcel.left) {
       if (unbalancedParcel.left?.balance > 0) {
         console.log('right rotation');
-      }
-      if (unbalancedParcel.left?.balance < 0) {
+        const newTop = unbalancedParcel.left;
+        if (unbalancedParcel === this.root) {
+          this.root = newTop;
+        }
+        unbalancedParcel.left = undefined;
+        unbalancedParcel.height = this.calculateHeight(unbalancedParcel);
+        this.placeParcel(newTop, unbalancedParcel);
+        //   newTop = left
+        // if unbalanced parcel === root then the new root is NewTop
+        //
+        // homelessParcel = unbalancedParcel
+        // placeParcel is called with newTop and unbalancedParcel
+      } else if (unbalancedParcel.left?.balance < 0) {
         console.log('rightLeft rotation');
       }
     } else if (unbalancedParcel.balance < -1 && unbalancedParcel.right) {
       if (unbalancedParcel.right?.balance < 0) {
         console.log('left rotation');
-      }
-      if (unbalancedParcel.right?.balance > 0) {
+      } else if (unbalancedParcel.right?.balance > 0) {
         console.log('leftRight rotation');
       }
     }

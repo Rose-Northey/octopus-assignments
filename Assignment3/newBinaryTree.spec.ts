@@ -79,12 +79,39 @@ describe('new nodes are added to the tree', () => {
   });
 });
 
-describe('tree performs left and right rotations', () => {
-  test('when tree is left heavy, it rotates right', () => {
-    const myTree = new ParcelTree();
-    myTree.addParcel(4);
-    myTree.addParcel(6);
-    myTree.addParcel(5);
-    expect(1).toBe(1);
+describe('tree performs left rotations on 4,3,2', () => {
+  const myTree = new ParcelTree();
+  myTree.addParcel(4);
+  myTree.addParcel(3);
+  myTree.addParcel(2);
+  test('root changes to 3 ', () => {
+    expect(myTree.root?.data).toBe(3);
+  });
+  test('new right is 4', () => {
+    expect(myTree.root?.right?.data).toBe(4);
+  });
+  test('new height of 4 is 1', () => {
+    expect(myTree.root?.right?.height).toBe(1);
+  });
+  //   test('new height of root is 2', () => {
+  //     expect(myTree.root?.height).toBe(2);
+  //   });
+});
+
+describe('tree performs left rotations on 4,3,2,5,1', () => {
+  const myTree = new ParcelTree();
+  myTree.addParcel(4);
+  myTree.addParcel(3);
+  myTree.addParcel(2);
+  myTree.addParcel(5);
+  myTree.addParcel(1);
+  test('root changes to 3 ', () => {
+    expect(myTree.root?.data).toBe(3);
+  });
+  test('new right is 4', () => {
+    expect(myTree.root?.right?.data).toBe(4);
+  });
+  test('new right of right is is 5', () => {
+    expect(myTree.root?.right?.right?.data).toBe(5);
   });
 });
