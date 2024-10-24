@@ -12,6 +12,7 @@ class Parcel {
     this.balance = 0;
   }
 }
+type ParcelWithLeft = Parcel & {left: Parcel};
 
 export class ParcelTree {
   root: Parcel | undefined;
@@ -63,26 +64,48 @@ export class ParcelTree {
   rebalanceBranch(unbalancedParcel: Parcel) {
     if (unbalancedParcel.balance > 1 && unbalancedParcel.left) {
       if (unbalancedParcel.left?.balance > 0) {
-        console.log('right rotation');
-
-        const newTop = unbalancedParcel.left;
-        if (unbalancedParcel === this.root) {
-          this.root = newTop;
-        }
-        newTop.parent = unbalancedParcel.parent;
-        unbalancedParcel.left = undefined;
-        unbalancedParcel.parent = undefined;
-        this.recalculateHeightsAndBalancesOfBranch(unbalancedParcel);
-        this.placeParcel(newTop, unbalancedParcel);
+        this.rightRotation(unbalancedParcel);
       } else if (unbalancedParcel.left?.balance < 0) {
         console.log('rightLeft rotation');
       }
     } else if (unbalancedParcel.balance < -1 && unbalancedParcel.right) {
       if (unbalancedParcel.right?.balance < 0) {
-        console.log('left rotation');
+        this.leftRotation(unbalancedParcel);
       } else if (unbalancedParcel.right?.balance > 0) {
         console.log('leftRight rotation');
       }
+    }
+  }
+  rightRotation(unbalancedParcel: Parcel): void {
+    if (unbalancedParcel.left) {
+      const newTop = unbalancedParcel.left;
+      if (unbalancedParcel === this.root) {
+        this.root = newTop;
+      }
+      if (unbalancedParcel.parent) {
+        unbalancedParcel.parent.left = newTop;
+      }
+      newTop.parent = unbalancedParcel.parent;
+      unbalancedParcel.left = undefined;
+      unbalancedParcel.parent = undefined;
+      this.recalculateHeightsAndBalancesOfBranch(unbalancedParcel);
+      this.placeParcel(newTop, unbalancedParcel);
+    }
+  }
+  leftRotation(unbalancedParcel: Parcel): void {
+    if (unbalancedParcel.right) {
+      const newTop = unbalancedParcel.right;
+      if (unbalancedParcel === this.root) {
+        this.root = newTop;
+      }
+      if (unbalancedParcel.parent) {
+        unbalancedParcel.parent.right = newTop;
+      }
+      newTop.parent = unbalancedParcel.parent;
+      unbalancedParcel.right = undefined;
+      unbalancedParcel.parent = undefined;
+      this.recalculateHeightsAndBalancesOfBranch(unbalancedParcel);
+      this.placeParcel(newTop, unbalancedParcel);
     }
   }
 }
