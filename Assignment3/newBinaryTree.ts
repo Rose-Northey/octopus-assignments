@@ -12,7 +12,6 @@ class Parcel {
     this.balance = 0;
   }
 }
-type ParcelWithLeft = Parcel & {left: Parcel};
 
 export class ParcelTree {
   root: Parcel | undefined;
@@ -20,33 +19,33 @@ export class ParcelTree {
     const newParcel = new Parcel(data);
     if (!this.root) {
       this.root = newParcel;
-      console.log(`root changed to ${this.root.data}`);
     } else this.placeParcel(this.root, newParcel);
   }
-  placeParcel(parcelInTree: Parcel, parcelToPlace: Parcel) {
-    if (parcelToPlace.data <= parcelInTree.data) {
+  placeParcel(parcelInTree: Parcel, homelessParcel: Parcel) {
+    if (homelessParcel.data <= parcelInTree.data) {
       if (!parcelInTree.left) {
-        parcelInTree.left = parcelToPlace;
-        parcelToPlace.parent = parcelInTree;
-        this.recalculateHeightsAndBalancesOfBranch(parcelToPlace);
+        parcelInTree.left = homelessParcel;
+        homelessParcel.parent = parcelInTree;
+        this.recalculateHeightsAndBalancesOfBranch(homelessParcel);
       } else {
-        this.placeParcel(parcelInTree.left, parcelToPlace);
+        this.placeParcel(parcelInTree.left, homelessParcel);
       }
     } else {
       if (!parcelInTree.right) {
-        parcelInTree.right = parcelToPlace;
-        parcelToPlace.parent = parcelInTree;
-        this.recalculateHeightsAndBalancesOfBranch(parcelToPlace);
+        parcelInTree.right = homelessParcel;
+        homelessParcel.parent = parcelInTree;
+        this.recalculateHeightsAndBalancesOfBranch(homelessParcel);
       } else {
-        this.placeParcel(parcelInTree.right, parcelToPlace);
+        this.placeParcel(parcelInTree.right, homelessParcel);
       }
     }
     return;
   }
 
   recalculateHeightsAndBalancesOfBranch(parcel: Parcel) {
-    parcel.height = this.calculateHeight(parcel);
-    parcel.balance = this.calculateBalance(parcel);
+    parcel.height =
+      1 + Math.max(parcel.left?.height ?? 0, parcel.right?.height ?? 0);
+    parcel.balance = (parcel.left?.height ?? 0) - (parcel.right?.height ?? 0);
     if (Math.abs(parcel.balance) > 1) {
       this.rebalanceBranch(parcel);
     } else if (parcel.parent) {
@@ -55,83 +54,72 @@ export class ParcelTree {
     return;
   }
 
-  calculateHeight(parcel: Parcel) {
-    return 1 + Math.max(parcel.left?.height ?? 0, parcel.right?.height ?? 0);
-  }
-  calculateBalance(parcel: Parcel) {
-    return (parcel.left?.height ?? 0) - (parcel.right?.height ?? 0);
-  }
   rebalanceBranch(unbalancedParcel: Parcel) {
     if (unbalancedParcel.balance > 1 && unbalancedParcel.left) {
       if (unbalancedParcel.left?.balance > 0) {
-        console.log('right rotation');
-        this.rightRotation(unbalancedParcel);
+        this.rotateToRight(unbalancedParcel);
       } else if (unbalancedParcel.left?.balance < 0) {
-        console.log('rightLeft rotation');
-        this.rightLeftRotation(unbalancedParcel);
+        this.rotateLeftChildToLeft(unbalancedParcel);
       }
     } else if (unbalancedParcel.balance < -1 && unbalancedParcel.right) {
       if (unbalancedParcel.right?.balance < 0) {
-        console.log('left rotation');
-        this.leftRotation(unbalancedParcel);
+        this.rotateToLeft(unbalancedParcel);
       } else if (unbalancedParcel.right?.balance > 0) {
-        console.log('leftRight rotation');
-        this.leftRightRotation(unbalancedParcel);
+        this.rotateRightChildToRight(unbalancedParcel);
       }
     }
   }
-  rightRotation(unbalancedParcel: Parcel): void {
+  rotateToRight(unbalancedParcel: Parcel): void {
     if (unbalancedParcel.left) {
       const newTop = unbalancedParcel.left;
-      if (unbalancedParcel === this.root) {
+      if (!unbalancedParcel.parent) {
         this.root = newTop;
-        console.log(`root changed to ${this.root.data}`);
-      }
-      if (unbalancedParcel.parent) {
+      } else {
         unbalancedParcel.parent.left = newTop;
       }
       newTop.parent = unbalancedParcel.parent;
       unbalancedParcel.left = undefined;
       unbalancedParcel.parent = undefined;
-      this.recalculateHeightsAndBalancesOfBranch(unbalancedParcel);
       this.placeParcel(newTop, unbalancedParcel);
     }
   }
-  leftRotation(unbalancedParcel: Parcel): void {
+
+  rotateToLeft(unbalancedParcel: Parcel): void {
     if (unbalancedParcel.right) {
       const newTop = unbalancedParcel.right;
-      if (unbalancedParcel === this.root) {
+      if (!unbalancedParcel.parent) {
         this.root = newTop;
-        console.log(`root changed to ${this.root.data}`);
-      }
-      if (unbalancedParcel.parent) {
+      } else {
         unbalancedParcel.parent.right = newTop;
       }
       newTop.parent = unbalancedParcel.parent;
       unbalancedParcel.right = undefined;
       unbalancedParcel.parent = undefined;
-      this.recalculateHeightsAndBalancesOfBranch(unbalancedParcel);
       this.placeParcel(newTop, unbalancedParcel);
     }
   }
-  rightLeftRotation(unbalancedParcel: Parcel) {
+  rotateLeftChildToLeft(unbalancedParcel: Parcel) {
     if (unbalancedParcel.left && unbalancedParcel.left.right) {
+      const newLeft = unbalancedParcel.left.right;
       const homelessParcel = unbalancedParcel.left;
-      unbalancedParcel.left = unbalancedParcel.left.right;
-      unbalancedParcel.left.parent = unbalancedParcel;
+
+      unbalancedParcel.left = newLeft;
+      newLeft.parent = unbalancedParcel;
       homelessParcel.right = undefined;
-      this.recalculateHeightsAndBalancesOfBranch(homelessParcel);
-      this.placeParcel(unbalancedParcel, homelessParcel);
+
+      this.placeParcel(newLeft, homelessParcel);
     }
   }
-  leftRightRotation(unbalancedParcel: Parcel) {
+  rotateRightChildToRight(unbalancedParcel: Parcel) {
     if (unbalancedParcel.right && unbalancedParcel.right.left) {
+      const newRight = unbalancedParcel.right.left;
       const homelessParcel = unbalancedParcel.right;
-      unbalancedParcel.right = unbalancedParcel.right.left;
-      unbalancedParcel.right.parent = unbalancedParcel;
+
+      unbalancedParcel.right = newRight;
+      newRight.parent = unbalancedParcel;
       homelessParcel.left = undefined;
-      this.recalculateHeightsAndBalancesOfBranch(homelessParcel);
-      this.placeParcel(unbalancedParcel, homelessParcel);
+
+      this.placeParcel(newRight, homelessParcel);
     }
   }
 }
