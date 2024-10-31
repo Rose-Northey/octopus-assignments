@@ -1,13 +1,13 @@
 class Parcel {
   parent: Parcel | undefined;
-  data: number;
+  houseNumber: number;
   left: Parcel | undefined;
   right: Parcel | undefined;
   height: number;
   balance: number;
 
-  constructor(data: number) {
-    this.data = data;
+  constructor(houseNumber: number) {
+    this.houseNumber = houseNumber;
     this.height = 1;
     this.balance = 0;
   }
@@ -15,14 +15,16 @@ class Parcel {
 
 export class ParcelTree {
   root: Parcel | undefined;
-  public addParcel(data: number) {
-    const newParcel = new Parcel(data);
+  public addParcel(houseNumber: number) {
+    const newParcel = new Parcel(houseNumber);
     if (!this.root) {
       this.root = newParcel;
+      console.log(`new root is ${this.root.houseNumber}`);
     } else this.placeParcel(this.root, newParcel);
   }
+  public findParcel() {}
   placeParcel(parcelInTree: Parcel, homelessParcel: Parcel) {
-    if (homelessParcel.data <= parcelInTree.data) {
+    if (homelessParcel.houseNumber <= parcelInTree.houseNumber) {
       if (!parcelInTree.left) {
         parcelInTree.left = homelessParcel;
         homelessParcel.parent = parcelInTree;
@@ -58,14 +60,26 @@ export class ParcelTree {
     if (unbalancedParcel.balance > 1 && unbalancedParcel.left) {
       if (unbalancedParcel.left?.balance > 0) {
         this.rotateToRight(unbalancedParcel);
+        console.log(
+          `${unbalancedParcel.houseNumber} is unbalanced, rotate to right`
+        );
       } else if (unbalancedParcel.left?.balance < 0) {
         this.rotateLeftChildToLeft(unbalancedParcel);
+        console.log(
+          `${unbalancedParcel.houseNumber} is unbalanced, rotate child to left`
+        );
       }
     } else if (unbalancedParcel.balance < -1 && unbalancedParcel.right) {
       if (unbalancedParcel.right?.balance < 0) {
         this.rotateToLeft(unbalancedParcel);
+        console.log(
+          `${unbalancedParcel.houseNumber} is unbalanced, rotate to left`
+        );
       } else if (unbalancedParcel.right?.balance > 0) {
         this.rotateRightChildToRight(unbalancedParcel);
+        console.log(
+          `${unbalancedParcel.houseNumber} is unbalanced, rotate child to left`
+        );
       }
     }
   }
@@ -74,6 +88,7 @@ export class ParcelTree {
       const newTop = unbalancedParcel.left;
       if (!unbalancedParcel.parent) {
         this.root = newTop;
+        console.log(`new root is ${this.root.houseNumber}`);
       } else {
         unbalancedParcel.parent.left = newTop;
       }
@@ -89,6 +104,7 @@ export class ParcelTree {
       const newTop = unbalancedParcel.right;
       if (!unbalancedParcel.parent) {
         this.root = newTop;
+        console.log(`new root is ${this.root.houseNumber}`);
       } else {
         unbalancedParcel.parent.right = newTop;
       }
