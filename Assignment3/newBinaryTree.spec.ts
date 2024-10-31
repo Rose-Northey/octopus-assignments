@@ -243,3 +243,16 @@ describe('tree performs complex rightLeft rotation on 10,30,25,20,5,15', () => {
     expect(myTree.root?.houseNumber).toBe(29);
   });
 });
+
+describe('tree is able to locate parcel sent to number 7', () => {
+  const myTree = new ParcelTree();
+  myTree.addParcel(10, 'birthday card');
+  myTree.addParcel(8, 'pickles');
+  myTree.addParcel(12, 'a stack of bills');
+  myTree.addParcel(7, 'teddy bear');
+  myTree.addParcel(14, 'paint thinner');
+  const myParcel = myTree.locateParcel(7);
+  test('parcel number 7 to contain a teddybear', () => {
+    expect(myParcel?.contents).toBe('teddy bear');
+  });
+});

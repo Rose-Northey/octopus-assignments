@@ -5,24 +5,26 @@ class Parcel {
   right: Parcel | undefined;
   height: number;
   balance: number;
+  contents: string;
 
-  constructor(houseNumber: number) {
+  constructor(houseNumber: number, contents: string) {
     this.houseNumber = houseNumber;
     this.height = 1;
     this.balance = 0;
+    this.contents = contents;
   }
 }
 
 export class ParcelTree {
   root: Parcel | undefined;
-  public addParcel(houseNumber: number) {
-    const newParcel = new Parcel(houseNumber);
+  public addParcel(houseNumber: number, contents = '') {
+    const newParcel = new Parcel(houseNumber, contents);
     if (!this.root) {
       this.root = newParcel;
       console.log(`new root is ${this.root.houseNumber}`);
     } else this.placeParcel(this.root, newParcel);
   }
-  public findParcel() {}
+
   placeParcel(parcelInTree: Parcel, homelessParcel: Parcel) {
     if (homelessParcel.houseNumber <= parcelInTree.houseNumber) {
       if (!parcelInTree.left) {
@@ -138,4 +140,20 @@ export class ParcelTree {
       this.placeParcel(newRight, homelessParcel);
     }
   }
+  locateParcel(
+    desiredHouseNumber: number,
+    currentParcel = this.root
+  ): Parcel | undefined {
+    if (!currentParcel) {
+      throw new Error('there are no parcels of this house number in the tree');
+    }
+    if (currentParcel.houseNumber === desiredHouseNumber) {
+      return currentParcel;
+    } else if (currentParcel.houseNumber > desiredHouseNumber) {
+      return this.locateParcel(desiredHouseNumber, currentParcel.left);
+    } else if (currentParcel.houseNumber < desiredHouseNumber) {
+      return this.locateParcel(desiredHouseNumber, currentParcel.right);
+    }
+  }
 }
+// if the currentParcel is the desiredHouseNumber, return that, else if
