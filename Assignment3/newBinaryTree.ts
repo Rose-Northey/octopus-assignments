@@ -24,7 +24,7 @@ export class ParcelTree {
       console.log(`new root is ${this.root.houseNumber}`);
     } else this.placeParcel(this.root, newParcel);
   }
-
+  public findParcel() {}
   placeParcel(parcelInTree: Parcel, homelessParcel: Parcel) {
     if (homelessParcel.houseNumber <= parcelInTree.houseNumber) {
       if (!parcelInTree.left) {
@@ -87,35 +87,43 @@ export class ParcelTree {
   }
   rotateToRight(unbalancedParcel: Parcel): void {
     if (unbalancedParcel.left) {
-      const newTop = unbalancedParcel.left;
-      if (!unbalancedParcel.parent) {
-        this.root = newTop;
-        console.log(`new root is ${this.root.houseNumber}`);
-      } else {
-        unbalancedParcel.parent.left = newTop;
-      }
-      newTop.parent = unbalancedParcel.parent;
-      unbalancedParcel.left = undefined;
-      unbalancedParcel.parent = undefined;
-      this.placeParcel(newTop, unbalancedParcel);
+      this.rotate(unbalancedParcel, unbalancedParcel.left, true);
     }
   }
 
   rotateToLeft(unbalancedParcel: Parcel): void {
     if (unbalancedParcel.right) {
-      const newTop = unbalancedParcel.right;
-      if (!unbalancedParcel.parent) {
-        this.root = newTop;
-        console.log(`new root is ${this.root.houseNumber}`);
+      this.rotate(unbalancedParcel, unbalancedParcel.right, false);
+    }
+  }
+
+  rotate(
+    unbalancedParcel: Parcel,
+    childOfInterest: Parcel,
+    isLeft: boolean
+  ): void {
+    const newTop = childOfInterest;
+    if (!unbalancedParcel.parent) {
+      this.root = newTop;
+      console.log(`new root is ${this.root.houseNumber}`);
+    } else {
+      if (isLeft) {
+        unbalancedParcel.parent.left = newTop;
       } else {
         unbalancedParcel.parent.right = newTop;
       }
-      newTop.parent = unbalancedParcel.parent;
-      unbalancedParcel.right = undefined;
-      unbalancedParcel.parent = undefined;
-      this.placeParcel(newTop, unbalancedParcel);
     }
+    newTop.parent = unbalancedParcel.parent;
+    if (isLeft) {
+      unbalancedParcel.left = undefined;
+    } else {
+      unbalancedParcel.right = undefined;
+    }
+
+    unbalancedParcel.parent = undefined;
+    this.placeParcel(newTop, unbalancedParcel);
   }
+
   rotateLeftChildToLeft(unbalancedParcel: Parcel) {
     if (unbalancedParcel.left && unbalancedParcel.left.right) {
       const newLeft = unbalancedParcel.left.right;
@@ -154,6 +162,77 @@ export class ParcelTree {
     } else if (currentParcel.houseNumber < desiredHouseNumber) {
       return this.locateParcel(desiredHouseNumber, currentParcel.right);
     }
+  }
+
+  public deleteParcel(deletedParcelHouseNumber: number) {
+    const deleted = this.locateParcel(deletedParcelHouseNumber);
+    if (!deleted) {
+      throw new Error('this parcel already does not exist');
+    }
+    const parentOfDeleted = deleted.parent;
+    const leftOfDeleted = deleted.left;
+    const rightOfDeleted = deleted.right;
+
+    const replacement = this.findReplacementForDeleted(deleted);
+    const parentOfReplacement = replacement?.parent ?? undefined;
+    const leftOfReplacement = replacement?.left ?? undefined;
+
+    // adopt replacement
+    if (!parentOfDeleted) {
+      this.root = replacement;
+    } else {
+      parentOfDeleted.left === deleted
+        ? (parentOfDeleted.left = replacement)
+        : (parentOfDeleted.right = replacement);
+    }
+
+    // readopt replacement's potential child or mark empty space with undefined
+    if (parentOfReplacement && parentOfReplacement != deleted) {
+      parentOfReplacement.right = leftOfReplacement;
+      leftOfReplacement
+        ? (leftOfReplacement.parent = parentOfReplacement)
+        : null;
+    }
+
+    // if there's nothing on the left, right becomes top
+    // if (!leftOfDeleted) {
+    //   const replacement = rightOfDeleted;
+    //   if (!parentOfDeleted) {
+    //     this.root = replacement;
+    //   } else {
+    //     parentOfDeleted.left === deleted
+    //       ? (parentOfDeleted.left = replacement)
+    //       : (parentOfDeleted.right = replacement);
+    //   }
+    //   return;
+    // } else {
+    //   const replacement = this.findHighestInBranch(leftOfDeleted);
+    //   const parentOfReplacement = replacement.parent;
+    //   if (!parentOfReplacement) {
+    //     this.root = replacement;
+    //   } else {
+    //     const leftOfReplacement = replacement.left;
+    //     if (parentOfReplacement != deleted) {
+    //       parentOfReplacement.right = leftOfReplacement;
+    //     }
+    //   }
+    // }
+  }
+
+  findReplacementForDeleted(deleted: Parcel): Parcel | undefined {
+    const leftOfDeleted = deleted.left;
+    const rightOfDeleted = deleted.right;
+    if (!leftOfDeleted) {
+      return rightOfDeleted ?? undefined;
+    }
+    return this.findHighestInBranch(leftOfDeleted);
+  }
+
+  findHighestInBranch(topOfBranch: Parcel): Parcel {
+    if (!topOfBranch.right) {
+      return topOfBranch;
+    }
+    return this.findHighestInBranch(topOfBranch.right);
   }
 }
 // if the currentParcel is the desiredHouseNumber, return that, else if
