@@ -256,3 +256,104 @@ describe('tree is able to locate parcel sent to number 7', () => {
     expect(myParcel?.contents).toBe('teddy bear');
   });
 });
+
+describe('tree is able to delete nodes and rebalance', () => {
+  test('throws error when node to delete does not exist', () => {
+    const myTree = new ParcelTree();
+    expect(() => myTree.deleteParcel(4)).toThrow();
+  });
+  test('deletes only node on tree', () => {
+    const myTree = new ParcelTree();
+    myTree.addParcel(4);
+    myTree.deleteParcel(4);
+    expect(() => {
+      myTree.locateParcel(4);
+    }).toThrow();
+  });
+  test('in left heavy two node tree, left child becomes root', () => {
+    const myTree = new ParcelTree();
+    myTree.addParcel(4);
+    myTree.addParcel(1);
+    myTree.deleteParcel(4);
+    expect(myTree.root?.houseNumber).toBe(1);
+  });
+  test('in right heavy two node tree, left child becomes root', () => {
+    const myTree = new ParcelTree();
+    myTree.addParcel(4);
+    myTree.addParcel(6);
+    myTree.deleteParcel(4);
+    expect(myTree.root?.houseNumber).toBe(6);
+  });
+});
+describe('correct child replaces delete of a 3 node tree', () => {
+  const myTree = new ParcelTree();
+  myTree.addParcel(4);
+  myTree.addParcel(6);
+  myTree.addParcel(1);
+  myTree.deleteParcel(4);
+  test('root correct', () => {
+    expect(myTree.root?.houseNumber).toBe(1);
+  });
+  test('right child correct', () => {
+    expect(myTree.root?.right?.houseNumber).toBe(6);
+  });
+});
+
+describe('rightmost child on the left is new root and all children are kept', () => {
+  const myTree = new ParcelTree();
+  myTree.addParcel(4);
+  myTree.addParcel(6);
+  myTree.addParcel(1);
+  myTree.addParcel(2);
+  myTree.deleteParcel(4);
+  test('root correct', () => {
+    expect(myTree.root?.houseNumber).toBe(2);
+  });
+  test('right child correct', () => {
+    expect(myTree.root?.right?.houseNumber).toBe(6);
+  });
+  test('left child correct', () => {
+    expect(myTree.root?.left?.houseNumber).toBe(1);
+  });
+});
+
+describe('right most chid on left becomes new root and its previous child is adopted by its previous parent', () => {
+  const myTree = new ParcelTree();
+  myTree.addParcel(10);
+  myTree.addParcel(5);
+  myTree.addParcel(20);
+  myTree.addParcel(1);
+  myTree.addParcel(7);
+  myTree.addParcel(25);
+  myTree.addParcel(6);
+  myTree.deleteParcel(10);
+  test('root correct', () => {
+    expect(myTree.root?.houseNumber).toBe(7);
+  });
+  test('left child correct', () => {
+    expect(myTree.root?.left?.right?.houseNumber).toBe(6);
+  });
+});
+
+describe('right most chid on left becomes new root and its previous child is adopted by its previous parent', () => {
+  const myTree = new ParcelTree();
+  myTree.addParcel(30);
+  myTree.addParcel(10);
+  myTree.addParcel(50);
+  myTree.addParcel(40);
+  myTree.addParcel(60);
+  myTree.addParcel(5);
+  myTree.addParcel(35);
+  myTree.addParcel(20);
+  myTree.addParcel(1);
+  myTree.addParcel(7);
+  myTree.addParcel(25);
+  myTree.addParcel(6);
+  myTree.deleteParcel(10);
+  test('root new left child is correct new node', () => {
+    expect(myTree.root?.left?.houseNumber).toBe(7);
+  });
+  test('root new left child also considers it to be a parent', () => {
+    expect(myTree.root?.left?.parent?.houseNumber).toBe(30);
+  });
+});

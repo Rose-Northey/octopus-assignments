@@ -24,7 +24,6 @@ export class ParcelTree {
       console.log(`new root is ${this.root.houseNumber}`);
     } else this.placeParcel(this.root, newParcel);
   }
-  public findParcel() {}
   placeParcel(parcelInTree: Parcel, homelessParcel: Parcel) {
     if (homelessParcel.houseNumber <= parcelInTree.houseNumber) {
       if (!parcelInTree.left) {
@@ -148,7 +147,7 @@ export class ParcelTree {
       this.placeParcel(newRight, homelessParcel);
     }
   }
-  locateParcel(
+  public locateParcel(
     desiredHouseNumber: number,
     currentParcel = this.root
   ): Parcel | undefined {
@@ -169,66 +168,58 @@ export class ParcelTree {
     if (!deleted) {
       throw new Error('this parcel already does not exist');
     }
-    const parentOfDeleted = deleted.parent;
-    const leftOfDeleted = deleted.left;
-    const rightOfDeleted = deleted.right;
+    const parentOfDeleted = deleted.parent; // either has a parent or undefined
+    const leftOfDeleted = deleted.left; // either parcel or undefined
+    const rightOfDeleted = deleted.right; // either parcel or undefined
 
     const replacement = this.findReplacementForDeleted(deleted);
-    const parentOfReplacement = replacement?.parent ?? undefined;
+    let parentOfReplacement = replacement?.parent ?? undefined;
     const leftOfReplacement = replacement?.left ?? undefined;
 
-    // adopt replacement
-    if (!parentOfDeleted) {
-      this.root = replacement;
-    } else {
+    // adopt replacement from parentOfDeleted perspective
+    if (parentOfDeleted) {
       parentOfDeleted.left === deleted
         ? (parentOfDeleted.left = replacement)
         : (parentOfDeleted.right = replacement);
+    } else {
+      this.root = replacement;
     }
 
-    // readopt replacement's potential child or mark empty space with undefined
-    if (parentOfReplacement && parentOfReplacement != deleted) {
+    // replacement accepts deleted's old parents if any
+    if (replacement) {
+      replacement.parent = parentOfDeleted;
+    }
+
+    // if parent of replacement exists and is not the same as the deleted node, adopt left child or mark the right child as undefined
+    if (parentOfReplacement && parentOfReplacement !== deleted) {
       parentOfReplacement.right = leftOfReplacement;
-      leftOfReplacement
-        ? (leftOfReplacement.parent = parentOfReplacement)
-        : null;
+      if (leftOfReplacement) {
+        leftOfReplacement.parent = parentOfReplacement;
+      }
     }
 
-    // if there's nothing on the left, right becomes top
-    // if (!leftOfDeleted) {
-    //   const replacement = rightOfDeleted;
-    //   if (!parentOfDeleted) {
-    //     this.root = replacement;
-    //   } else {
-    //     parentOfDeleted.left === deleted
-    //       ? (parentOfDeleted.left = replacement)
-    //       : (parentOfDeleted.right = replacement);
-    //   }
-    //   return;
-    // } else {
-    //   const replacement = this.findHighestInBranch(leftOfDeleted);
-    //   const parentOfReplacement = replacement.parent;
-    //   if (!parentOfReplacement) {
-    //     this.root = replacement;
-    //   } else {
-    //     const leftOfReplacement = replacement.left;
-    //     if (parentOfReplacement != deleted) {
-    //       parentOfReplacement.right = leftOfReplacement;
-    //     }
-    //   }
-    // }
+    //  replacement adopts all chidren of deleted
+    if (replacement) {
+      if (deleted.left !== replacement) {
+        replacement.left = deleted.left;
+      }
+      if (deleted.right !== replacement) {
+        replacement.right = deleted.right;
+      }
+    }
   }
 
   findReplacementForDeleted(deleted: Parcel): Parcel | undefined {
     const leftOfDeleted = deleted.left;
     const rightOfDeleted = deleted.right;
     if (!leftOfDeleted) {
-      return rightOfDeleted ?? undefined;
+      return rightOfDeleted ?? undefined; // if both left and right don't exist return undefined
     }
     return this.findHighestInBranch(leftOfDeleted);
   }
 
   findHighestInBranch(topOfBranch: Parcel): Parcel {
+    // go down right of branch until end
     if (!topOfBranch.right) {
       return topOfBranch;
     }
