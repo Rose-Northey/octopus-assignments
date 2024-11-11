@@ -163,67 +163,63 @@ export class ParcelTree {
     }
   }
 
-  public deleteParcel(deletedParcelHouseNumber: number) {
-    const deleted = this.locateParcel(deletedParcelHouseNumber);
-    if (!deleted) {
+  public deleteParcel(parcelToDeleteHouseNumber: number) {
+    const parcelToDelete = this.locateParcel(parcelToDeleteHouseNumber);
+    if (!parcelToDelete) {
       throw new Error('this parcel already does not exist');
     }
-    const parentOfDeleted = deleted.parent; // either has a parent or undefined
-    const leftOfDeleted = deleted.left; // either parcel or undefined
-    const rightOfDeleted = deleted.right; // either parcel or undefined
+    const parentOfDeleted = parcelToDelete.parent;
+    const replacement = this.findReplacementForparcelToDelete(parcelToDelete);
+    let disownedParentOfReplacement = replacement?.parent ?? undefined;
+    const abandonedChildOfReplacement = replacement?.left ?? undefined;
 
-    const replacement = this.findReplacementForDeleted(deleted);
-    let parentOfReplacement = replacement?.parent ?? undefined;
-    const leftOfReplacement = replacement?.left ?? undefined;
-
-    // adopt replacement from parentOfDeleted perspective
+    // give replacement deleted's parents
     if (parentOfDeleted) {
-      parentOfDeleted.left === deleted
+      parentOfDeleted.left === parcelToDelete
         ? (parentOfDeleted.left = replacement)
         : (parentOfDeleted.right = replacement);
     } else {
       this.root = replacement;
     }
 
-    // replacement accepts deleted's old parents if any
+    // if the replacement
+    // if parent of replacement exists and is not the same as the parcelToDelete node, adopt left child to its right
+    if (
+      disownedParentOfReplacement &&
+      disownedParentOfReplacement !== parcelToDelete
+    ) {
+      disownedParentOfReplacement.right = abandonedChildOfReplacement;
+      if (abandonedChildOfReplacement) {
+        abandonedChildOfReplacement.parent = disownedParentOfReplacement;
+      }
+    }
+
+    //  replacement adopts all chidren of parcelToDelete
     if (replacement) {
       replacement.parent = parentOfDeleted;
-    }
-
-    // if parent of replacement exists and is not the same as the deleted node, adopt left child or mark the right child as undefined
-    if (parentOfReplacement && parentOfReplacement !== deleted) {
-      parentOfReplacement.right = leftOfReplacement;
-      if (leftOfReplacement) {
-        leftOfReplacement.parent = parentOfReplacement;
+      if (parcelToDelete.left !== replacement) {
+        replacement.left = parcelToDelete.left;
       }
-    }
-
-    //  replacement adopts all chidren of deleted
-    if (replacement) {
-      if (deleted.left !== replacement) {
-        replacement.left = deleted.left;
-      }
-      if (deleted.right !== replacement) {
-        replacement.right = deleted.right;
+      if (parcelToDelete.right !== replacement) {
+        replacement.right = parcelToDelete.right;
       }
     }
   }
 
-  findReplacementForDeleted(deleted: Parcel): Parcel | undefined {
-    const leftOfDeleted = deleted.left;
-    const rightOfDeleted = deleted.right;
-    if (!leftOfDeleted) {
-      return rightOfDeleted ?? undefined; // if both left and right don't exist return undefined
+  findReplacementForparcelToDelete(parcelToDelete: Parcel): Parcel | undefined {
+    if (parcelToDelete.left) {
+      return this.findFurthestRightParcelInBranch(parcelToDelete.left);
     }
-    return this.findHighestInBranch(leftOfDeleted);
+    if (parcelToDelete.right) {
+      return parcelToDelete.right;
+    }
+    return undefined;
   }
 
-  findHighestInBranch(topOfBranch: Parcel): Parcel {
-    // go down right of branch until end
-    if (!topOfBranch.right) {
-      return topOfBranch;
+  findFurthestRightParcelInBranch(currentParcel: Parcel): Parcel {
+    if (currentParcel.right) {
+      return this.findFurthestRightParcelInBranch(currentParcel.right);
     }
-    return this.findHighestInBranch(topOfBranch.right);
+    return currentParcel;
   }
 }
-// if the currentParcel is the desiredHouseNumber, return that, else if
