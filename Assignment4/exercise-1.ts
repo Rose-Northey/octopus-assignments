@@ -11,3 +11,18 @@
     HINT: Use setTimeout for the delay
 */
 
+export async function exercise1(): Promise<string> {
+    console.log("Program started");
+    const myPromise = new Promise<string>((resolve, reject) => {
+        setTimeout(() => {
+            resolve("Program complete");
+        }, 3000);
+        setTimeout(() => {
+            reject("Program failure");
+        }, 2000);
+    });
+    console.log(myPromise);
+    console.log("Program in progress...");
+    const result = await myPromise.then((resolveMessage: string) => resolveMessage).catch((rejectMessage: string) => rejectMessage);
+    return result;
+}
