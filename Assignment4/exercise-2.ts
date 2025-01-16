@@ -13,3 +13,30 @@
 
     HINT: Use setTimeout for the delay
 */
+
+export async function exercise2(): Promise<void> {
+    console.log("Program started");
+    const myFirstPromise = new Promise<Promise<string>>((resolve, reject) => {
+        setTimeout(() => {
+            resolve(
+                new Promise<string>((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve("Step 2 complete");
+                    }, 2000);
+                }),
+            );
+        }, 2000);
+    });
+
+    console.log(myFirstPromise);
+    console.log("Program in progress...");
+    await myFirstPromise
+        .then((mySecondPromise) => {
+            console.log("Step 1 complete");
+            return mySecondPromise;
+        })
+        .then((step2String) => {
+            console.log(step2String);
+        });
+}
+// we return the second promise and then this means the entire line of code can be .then'ed and you could do this many times if you really wanted

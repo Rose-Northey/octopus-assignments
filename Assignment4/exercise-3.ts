@@ -29,3 +29,41 @@
 
     BONUS: WHY does it work this way?
 */
+
+export async function exercise3() {
+    console.log("Program started");
+    const myFirstPromise = new Promise<{ data: string; error: null }>((resolve, reject) => {
+        setTimeout(() => {
+            resolve({ data: "Hello, friend!", error: null });
+        }, 1000);
+    });
+    console.log(myFirstPromise);
+    console.log("Program in progress...");
+    await myFirstPromise
+        .then(({ data, error }) => {
+            console.log(data);
+            return new Promise<string>((resolve, reject) => {
+                setTimeout(() => {
+                    resolve("First promise chain complete!");
+                }, 1000);
+            });
+        })
+        .then((firstChainMessage) => {
+            console.log(firstChainMessage);
+        });
+
+    await myFirstPromise
+        .then(({ data, error }) => {
+            console.log(data);
+            return new Promise<string>((resolve, reject) => {
+                setTimeout(() => {
+                    resolve("Second promise chain complete!");
+                }, 1000);
+            });
+        })
+        .then((secondChainMessage) => {
+            console.log(secondChainMessage);
+        });
+}
+
+// once the promise resolves itself, its calue is stored and will be simply used the next time the promise.then is used (there will be no further waiting after the first waiting is done)
